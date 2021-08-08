@@ -1,5 +1,5 @@
 # GraphicPlus
-A vector art plugin for Grasshopper 3d
+A scalable vector graphics plugin for Grasshopper 3d
 
 ---
 
