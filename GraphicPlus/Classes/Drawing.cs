@@ -175,7 +175,10 @@ namespace GraphicPlus
 
         #region Overrides
 
-
+        public override string ToString()
+        {
+            return "Drawing: (w:"+Math.Round(Width,2)+" h:"+Math.Round(Height,2)+" s:"+Shapes.Count+")";
+        }
 
         #endregion
 

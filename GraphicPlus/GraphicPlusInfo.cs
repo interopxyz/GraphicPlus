@@ -18,7 +18,7 @@ namespace GraphicPlus
             get
             {
                 //Return a 24x24 pixel bitmap to represent this GHA library.
-                return null;
+                return Properties.Resources.GraphicsPlus_24;
             }
         }
         public override string Description
@@ -26,7 +26,7 @@ namespace GraphicPlus
             get
             {
                 //Return a short string describing the purpose of this GHA library.
-                return "";
+                return "A scalable vector graphics plugin for Grasshopper 3d";
             }
         }
         public override Guid Id
@@ -42,7 +42,7 @@ namespace GraphicPlus
             get
             {
                 //Return a string identifying you or your company.
-                return "";
+                return "David Mans";
             }
         }
         public override string AuthorContact
@@ -50,7 +50,7 @@ namespace GraphicPlus
             get
             {
                 //Return a string representing your preferred contact details.
-                return "";
+                return "interopxyz@gmail.com";
             }
         }
     }
