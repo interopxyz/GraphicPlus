@@ -15,7 +15,10 @@ namespace GraphicPlus
 
         #region members
 
+        protected Guid id = new Guid();
+
         public enum PathTypes { None, Path, CompoundPath };
+
         public enum CurveTypes { None, Polyline, Circle, Ellipse, Curve };
 
         protected PathTypes pathType = PathTypes.None;
@@ -39,10 +42,12 @@ namespace GraphicPlus
             this.curveTypes = shape.curveTypes;
             this.curves = shape.curves;
             this.Graphics = new Graphic(shape.Graphics);
+            this.id = shape.id;
         }
 
         public Shape(NurbsCurve curve, Graphic graphic)
         {
+            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             this.Graphics = new Graphic(graphic);
             ParseCurves(curve);
@@ -50,34 +55,40 @@ namespace GraphicPlus
 
         public Shape(NurbsCurve curve)
         {
+            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             ParseCurves(curve);
         }
 
         public Shape(Curve curve)
         {
+            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             ParseCurves(curve.ToNurbsCurve());
         }
 
         public Shape(Circle circle)
         {
+            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             ParseCurves(circle);
         }
         public Shape(Ellipse ellipse)
         {
+            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             ParseCurves(ellipse);
         }
         public Shape(Polyline polyline)
         {
+            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             ParseCurves(polyline);
         }
 
         public Shape(Brep brep)
         {
+            this.id = Guid.NewGuid();
             this.pathType = PathTypes.CompoundPath;
             foreach (BrepLoop loop in brep.Loops)
             {
@@ -87,6 +98,7 @@ namespace GraphicPlus
 
         public Shape(Mesh mesh)
         {
+            this.id = Guid.NewGuid();
             this.pathType = PathTypes.CompoundPath;
             Polyline[] polylines = mesh.GetNakedEdges();
             foreach (Polyline polyline in polylines)
@@ -182,31 +194,33 @@ namespace GraphicPlus
                 switch (pathType)
                 {
                     case PathTypes.Path:
+
                         NurbsCurve curve = curves[0].DuplicateCurve().ToNurbsCurve();
                         curve.Transform(Transform.Mirror(plane));
                         curve.Translate(new Vector3d(-boundary.Corner(0)));
-                    curve.Transform(Transform.Scale(new Point3d(0, 0, 0), scale));
+                        curve.Transform(Transform.Scale(new Point3d(0, 0, 0), scale));
+
                         switch (curveTypes[0])
                         {
                             case CurveTypes.Circle:
                                 Circle circle = Circle.Unset;
-                                if (curve.TryGetCircle(out circle)) output.Append(circle.ToScript());
+                                if (curve.TryGetCircle(out circle)) output.Append(circle.ToScript(id.ToString()));
                                 break;
                             case CurveTypes.Ellipse:
                                 Ellipse ellipse = new Ellipse();
-                                if (curve.TryGetEllipse(out ellipse)) output.Append(ellipse.ToScript());
+                                if (curve.TryGetEllipse(out ellipse)) output.Append(ellipse.ToScript(id.ToString()));
                                 break;
                             case CurveTypes.Polyline:
                                 Polyline polyline = new Polyline();
-                                if (curve.TryGetPolyline(out polyline)) output.Append(polyline.ToScript());
+                                if (curve.TryGetPolyline(out polyline)) output.Append(polyline.ToScript(id.ToString()));
                                 break;
                             case CurveTypes.Curve:
-                                output.Append(curve.ToScript());
+                                output.Append(curve.ToScript(id.ToString()));
                                 break;
                     }
                     break;
                     case PathTypes.CompoundPath:
-                        output.Append("<path id=\"compound\" d =\"");
+                        output.Append("<path id=\"compound-" + id.ToString() + "\" d =\"");
                     for (int i = 0; i < curves.Count; i++)
                     {
                             NurbsCurve nurbs = curves[i].DuplicateCurve().ToNurbsCurve();
@@ -238,9 +252,9 @@ namespace GraphicPlus
                     output.Append("\" fill-rule=\"evenodd\"");
                         break;
             }
-            output.Append(" class=\"cls-" + this.Graphics.Id + "\" ");
-            if ((this.Graphics.FillType == Graphic.FillTypes.LinearGradient)| (this.Graphics.FillType == Graphic.FillTypes.RadialGradient)) output.Append("fill=\"url('#gr-" + this.Graphics.Id + "')\" ");
-            if ((this.Graphics.PostEffect.EffectType!= Effect.EffectTypes.None)) output.Append("filter = \"url(#ef-" + this.Graphics.Id + ")\" ");
+            output.Append(" class=\"cls-" + this.Graphics.GetHashCode() + "\" ");
+            if ((this.Graphics.FillType == Graphic.FillTypes.LinearGradient)| (this.Graphics.FillType == Graphic.FillTypes.RadialGradient)) output.Append("fill=\"url('#gr-" + this.Graphics.GetHashCode() + "')\" ");
+            if ((this.Graphics.PostEffect.EffectType!= Effect.EffectTypes.None)) output.Append("filter = \"url(#ef-" + this.Graphics.GetHashCode() + ")\" ");
             output.Append("/>");
 
             return output.ToString();

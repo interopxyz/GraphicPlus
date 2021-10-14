@@ -69,10 +69,12 @@
     <Compile Include="Classes\Shape.cs" />
     <Compile Include="Components\Drawings\GH_ConstructDrawing.cs" />
     <Compile Include="Components\Drawings\GH_DrawingToText.cs" />
+    <Compile Include="Components\Drawings\GH_Preview.cs" />
     <Compile Include="Components\Files\GH_SaveBmp.cs" />
     <Compile Include="Components\Drawings\GH_Viewer.cs" />
     <Compile Include="Components\Files\GH_SaveSvg.cs" />
     <Compile Include="Components\Drawings\GH_ToBitmap.cs" />
+    <Compile Include="Components\Graphics\GH_BaseGraphics.cs" />
     <Compile Include="Components\Graphics\GH_SetEffectBlur.cs" />
     <Compile Include="Components\Graphics\GH_SetEffectShadow.cs" />
     <Compile Include="Components\Graphics\GH_SetFillGradientLinear.cs" />
@@ -137,6 +139,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GraphicsPlus_24.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-Preview-01.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

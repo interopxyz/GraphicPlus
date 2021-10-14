@@ -76,5 +76,22 @@ namespace GraphicPlus
 
         #endregion
 
+        #region methods
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 13;
+                hash = (hash * 7) + (this.effectType.GetHashCode());
+                hash = (hash * 7) + (this.radius.GetHashCode());
+                hash = (hash * 7) + (this.distance.GetHashCode());
+                hash = (hash * 7) + (this.angle.GetHashCode());
+                return hash;
+            }
+        }
+
+        #endregion
+
     }
 }

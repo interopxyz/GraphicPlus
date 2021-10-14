@@ -4,16 +4,16 @@ using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 
-namespace GraphicPlus.Components.Graphics
+namespace GraphicPlus.Components
 {
-    public class GH_SetEffectShadow : GH_Component
+    public class GH_Preview : GH_BaseGraphics
     {
         /// <summary>
-        /// Initializes a new instance of the GH_SetEffectShadow class.
+        /// Initializes a new instance of the GH_Preview class.
         /// </summary>
-        public GH_SetEffectShadow()
-          : base("Drop Shadow", "Shadow",
-              "Applies a Drop Shadow Effect to a Shape",
+        public GH_Preview()
+          : base("Shape Preview Beta", "ShpPrev",
+              "A beta fill and stroke preview in Rhino."+Environment.NewLine+ "WARNING: This does not reflect most of the graphic settings in Graphic Plus." + Environment.NewLine + "For an accurate preview use the in canvas viewer components",
               "Display", "Graphics")
         {
         }
@@ -23,7 +23,7 @@ namespace GraphicPlus.Components.Graphics
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.primary | GH_Exposure.obscure; }
+            get { return GH_Exposure.secondary | GH_Exposure.obscure; }
         }
 
         /// <summary>
@@ -31,13 +31,7 @@ namespace GraphicPlus.Components.Graphics
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape / Geometry", "S", "A Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
-            pManager.AddNumberParameter("Shadow Blur Radius", "R", "The radius of the shadow effect", GH_ParamAccess.item);
-            pManager[1].Optional = true;
-            pManager.AddNumberParameter("Shadow Offset", "D", "The offset distance of the shadow effect", GH_ParamAccess.item);
-            pManager[2].Optional = true;
-            pManager.AddNumberParameter("Shadow Angle", "A", "The offset angle of the shadow effect", GH_ParamAccess.item);
-            pManager[3].Optional = true;
+            pManager.AddGenericParameter("Drawing", "D", "A Drawing object", GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -45,8 +39,6 @@ namespace GraphicPlus.Components.Graphics
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape", "S", "A Shape Object", GH_ParamAccess.item);
-            pManager.HideParameter(0);
         }
 
         /// <summary>
@@ -55,22 +47,19 @@ namespace GraphicPlus.Components.Graphics
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            Drawing drawing = new Drawing();
             IGH_Goo goo = null;
             if (!DA.GetData(0, ref goo)) return;
-            Shape shape = goo.ToShape();
+            if (goo.CastTo<Drawing>(out drawing))
+            {
+                drawing = new Drawing(drawing);
+            }
 
-            double radius = 1.0;
-            DA.GetData(1, ref radius);
+            foreach(Shape shape in drawing.Shapes)
+            {
+                prevShapes.Add(shape);
+            }
 
-            double distance = 1.0;
-            DA.GetData(2, ref distance);
-
-            double angle = 0.0;
-            DA.GetData(3, ref angle);
-
-            shape.Graphics.SetShadow(radius,distance,angle);
-
-            DA.SetData(0, shape);
         }
 
         /// <summary>
@@ -82,7 +71,7 @@ namespace GraphicPlus.Components.Graphics
             {
                 //You can add image files to your project resources and access them like this:
                 // return Resources.IconForThisComponent;
-                return Properties.Resources.GP_EffectsShadow_01;
+                return Properties.Resources.GP_Preview_01;
             }
         }
 
@@ -91,7 +80,7 @@ namespace GraphicPlus.Components.Graphics
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("4ea36ffe-f9ee-41b1-88a2-c2ff0b15d794"); }
+            get { return new Guid("35f36ea6-aee3-498e-9aaf-6028fed9e74f"); }
         }
     }
 }

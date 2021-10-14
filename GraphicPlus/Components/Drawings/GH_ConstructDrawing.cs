@@ -90,6 +90,7 @@ namespace GraphicPlus.Components.Drawings
 
             Drawing drawing = new Drawing(shapes, boundary, width, height);
             drawing.Background = background;
+            //prevShapes.AddRange(shapes);
 
             DA.SetData(0, drawing);
             DA.SetData(1, boundary);

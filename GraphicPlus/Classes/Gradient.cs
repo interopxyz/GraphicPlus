@@ -144,6 +144,29 @@ namespace GraphicPlus
 
         #endregion
 
+        #region methods
+
+        #region methods
+
+        public override int GetHashCode()
+        {
+            unchecked
+            {
+                int hash = 13;
+                hash = (hash * 7) + (this.x.GetHashCode());
+                hash = (hash * 7) + (this.y.GetHashCode());
+                foreach(GradientStop stp in stops)
+                {
+                    hash = (hash * 7) + (stp.GetHashCode());
+                }
+                return hash;
+            }
+        }
+
+        #endregion
+
+        #endregion
+
         #region overrides
 
         public override string ToString()

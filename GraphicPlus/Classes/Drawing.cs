@@ -153,14 +153,21 @@ namespace GraphicPlus
 
             StringBuilder defs = new StringBuilder();
             defs.AppendLine("<defs>");
+            int i = 0;
+            List<int> graphicIds = new List<int>();
             //Draw Geometry
             foreach(Shape shape in shapes)
             {
                 output.AppendLine(shape.ToScript(boundary, S));
-                defs.AppendLine(shape.Graphics.ToScript());
-                if (shape.Graphics.FillType == Graphic.FillTypes.LinearGradient) defs.AppendLine(shape.Graphics.GetLinearGradientScript());
-                if (shape.Graphics.FillType == Graphic.FillTypes.RadialGradient) defs.AppendLine(shape.Graphics.GetRadialGradientScript());
-                if (shape.Graphics.PostEffect.EffectType != Effect.EffectTypes.None) defs.AppendLine(shape.Graphics.ToSVGEffect());
+                if (!graphicIds.Contains(shape.Graphics.GetHashCode()))
+                {
+                    graphicIds.Add(shape.Graphics.GetHashCode());
+                    defs.AppendLine(shape.Graphics.ToScript());
+                    if (shape.Graphics.FillType == Graphic.FillTypes.LinearGradient) defs.AppendLine(shape.Graphics.GetLinearGradientScript());
+                    if (shape.Graphics.FillType == Graphic.FillTypes.RadialGradient) defs.AppendLine(shape.Graphics.GetRadialGradientScript());
+                    if (shape.Graphics.PostEffect.EffectType != Effect.EffectTypes.None) defs.AppendLine(shape.Graphics.ToSVGEffect());
+                }
+                i++;
             }
             defs.AppendLine("</defs>");
 

@@ -81,7 +81,7 @@ namespace GraphicPlus
 
         #region geometry
 
-        public static string ToScript(this Circle input, int digits = 4)
+        public static string ToScript(this Circle input, string id, int digits = 4)
         {
             StringBuilder output = new StringBuilder();
             Point3d center = input.Plane.Origin;
@@ -89,7 +89,7 @@ namespace GraphicPlus
             double Y = Math.Round(center.Y, digits);
             double R = Math.Round(input.Radius, digits);
 
-            output.Append("<circle id=\"circle\" ");
+            output.Append("<circle id=\"circle-" + id.ToString() + "\" ");
             output.Append("cx=\"" + X + "\" ");
             output.Append("cy=\"" + Y + "\" ");
             output.Append("r=\"" + R + "\" ");
@@ -97,7 +97,7 @@ namespace GraphicPlus
             return output.ToString();
         }
 
-        public static string ToScript(this Ellipse input, int digits = 4)
+        public static string ToScript(this Ellipse input, string id, int digits = 4)
         {
             StringBuilder output = new StringBuilder();
             double angle = Math.Round(Vector3d.VectorAngle(input.Plane.XAxis, Vector3d.XAxis, Plane.WorldXY) / Math.PI* 180.00, 6);
@@ -105,7 +105,7 @@ namespace GraphicPlus
             double X = Math.Round(input.Plane.Origin.X, digits);
             double Y = Math.Round(input.Plane.Origin.Y, digits);
 
-            output.Append("<ellipse id=\"ellipse\" ");
+            output.Append("<ellipse id=\"ellipse-" + id.ToString() + "\" ");
             output.Append("cx=\"" + X + "\" ");
             output.Append("cy=\"" + Y + "\" ");
             output.Append("rx=\"" + Math.Round(input.Radius1, digits) + "\" ");
@@ -115,11 +115,11 @@ namespace GraphicPlus
             return output.ToString();
         }
 
-        public static string ToScript(this Polyline input, int digits = 4)
+        public static string ToScript(this Polyline input, string id, int digits = 4)
         {
             StringBuilder output = new StringBuilder();
 
-                     output.Append("<polyline id=\"polyline\" ");
+                     output.Append("<polyline id=\"polyline-" + id.ToString() + "\" ");
             output.Append("points=\"");
             foreach(Point3d point in input)
             {
@@ -130,14 +130,14 @@ namespace GraphicPlus
             return output.ToString();
         }
 
-        public static string ToScript(this NurbsCurve input, int digits = 4)
+        public static string ToScript(this NurbsCurve input, string id, int digits = 4)
         {
             StringBuilder output = new StringBuilder();
 
             double mt = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance;
             BezierCurve[] beziers = BezierCurve.CreateCubicBeziers(input, mt, mt);
 
-            output.Append("<path id =\"curve\" ");
+            output.Append("<path id =\"curve-"+id.ToString()+"\" ");
             output.Append("d = \" ");
             output.Append("M " + input.PointAtStart.ToScript());
             foreach (BezierCurve bezier in beziers)
@@ -168,7 +168,7 @@ namespace GraphicPlus
             StringBuilder output = new StringBuilder();
 
             output.Append("<style>");
-            output.Append(" .cls-" + input.Id + "{");
+            output.Append(" .cls-" + input.GetHashCode() + "{");
             if ((input.StrokeColor.A > 0) & (input.Weight != 0))
             {
                 output.Append("stroke:" + input.StrokeColor.ToSVG() + "; ");
@@ -208,7 +208,7 @@ namespace GraphicPlus
 
             Gradient gradient = input.FillGradient;
 
-            output.Append("<linearGradient id=\"gr-" + input.Id + "\" ");
+            output.Append("<linearGradient id=\"gr-" + input.GetHashCode() + "\" ");
             output.Append("gradientTransform=\"rotate("+ Math.Round(gradient.Angle,digits) + ")\" ");
             output.AppendLine("gradientUnits=\"objectBoundingBox\" >");
 
@@ -228,7 +228,7 @@ namespace GraphicPlus
 
             Gradient gradient = input.FillGradient;
 
-            output.Append("<radialGradient id=\"gr-" + input.Id + "\" ");
+            output.Append("<radialGradient id=\"gr-" + input.GetHashCode() + "\" ");
             output.Append("gradientTransform=\"rotate(" + Math.Round(gradient.Angle, digits) + ")\" ");
             output.Append("cx=\"" + Math.Round(gradient.X * 100,digits) + "%\" cy=\"" + Math.Round(gradient.Y * 100, digits) + "%\" ");
             output.AppendLine("gradientUnits=\"objectBoundingBox\" >");
@@ -250,7 +250,7 @@ namespace GraphicPlus
         public static string ToSVGEffect(this Graphic input)
         {
             StringBuilder output = new StringBuilder();
-            output.AppendLine("<filter id=\"ef-" + input.Id + "\" x=\"-50%\" width=\"200%\" y =\"-50%\" height=\"200%\" >");
+            output.AppendLine("<filter id=\"ef-" + input.GetHashCode() + "\" x=\"-50%\" width=\"200%\" y =\"-50%\" height=\"200%\" >");
             if (input.PostEffect.EffectType == Effect.EffectTypes.Blur) output.AppendLine(input.PostEffect.GetBlurEffect() );
             if (input.PostEffect.EffectType == Effect.EffectTypes.Shadow) output.AppendLine(input.PostEffect.GetShadowEffect());
             output.Append("</filter>");

@@ -103,6 +103,23 @@ namespace GraphicPlus
 
         #region methods
 
+        public override int GetHashCode()
+        {
+
+            unchecked
+            {
+                int hash = 13;
+                hash = (hash * 7) + (this.fillType.GetHashCode());
+                hash = (hash * 7) + (this.StrokeColor.GetHashCode());
+                hash = (hash * 7) + (this.weight.GetHashCode());
+                hash = (hash * 7) + (string.Join(",", this.pattern).ToString().GetHashCode());
+                hash = (hash * 7) + (this.fillColor.GetHashCode());
+                hash = (hash * 7) + (this.gradient.GetHashCode());
+                hash = (hash * 7) + (this.effect.GetHashCode());
+                return Math.Abs(hash);
+            }
+        }
+
         public void SetStroke(Color color, double weight, List<double> pattern = null)
         {
             this.strokeColor = color;
