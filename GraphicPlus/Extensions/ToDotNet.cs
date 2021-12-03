@@ -366,6 +366,8 @@ namespace GraphicPlus
             Sm.DrawingContext drawingContext = drawingVisual.RenderOpen();
             Sm.GeometryGroup dwg = new Sm.GeometryGroup();
 
+            if(input.PathType != Shape.PathTypes.Text)
+            { 
                 for (int i = 0; i < input.Curves.Count;i++)
             {
                 Rg.NurbsCurve curve = input.Curves[i].DuplicateCurve().ToNurbsCurve();
@@ -378,6 +380,69 @@ namespace GraphicPlus
                 }
 
             drawingContext.DrawGeometry(input.Graphics.ToMediaBrush(), input.Graphics.ToMediaPen(), dwg);
+            }
+            else
+            {
+                Rg.NurbsCurve line = input.Curves[0].DuplicateCurve().ToNurbsCurve();
+                line.Transform(Rg.Transform.Mirror(plane));
+                line.Translate(vector);
+                line.Transform(Rg.Transform.Scale(new Rg.Point3d(0, 0, 0), Scale));
+
+                Sw.Point point = line.PointAtStart.ToWindowsPoint();
+
+                Sm.FormattedText text = new Sm.FormattedText(
+                    input.TextContent,
+                    System.Globalization.CultureInfo.GetCultureInfo("en-us"),
+                    Sw.FlowDirection.LeftToRight,
+                    new Sm.Typeface(input.Graphics.Font.Family),
+                    input.Graphics.Font.Size,
+                    new Sm.SolidColorBrush(input.Graphics.FillColor.ToMediaColor()));
+                if(input.Graphics.Font.IsBold)text.SetFontWeight(Sw.FontWeights.Bold);
+                if (input.Graphics.Font.IsItalic) text.SetFontStyle(Sw.FontStyles.Italic);
+                if (input.Graphics.Font.IsUnderlined) text.SetTextDecorations(Sw.TextDecorations.Underline);
+
+
+                switch (input.Graphics.Font.Justification)
+                {
+                    case FontObject.Justifications.BottomMiddle:
+                    case FontObject.Justifications.CenterMiddle:
+                    case FontObject.Justifications.TopMiddle:
+                        text.TextAlignment = Sw.TextAlignment.Center;
+                        break;
+                    case FontObject.Justifications.BottomRight:
+                    case FontObject.Justifications.CenterRight:
+                    case FontObject.Justifications.TopRight:
+                        text.TextAlignment = Sw.TextAlignment.Right;
+                        break;
+                }
+
+                double height = 0;
+                switch (input.Graphics.Font.Justification)
+                {
+                    case FontObject.Justifications.BottomLeft:
+                    case FontObject.Justifications.BottomMiddle:
+                    case FontObject.Justifications.BottomRight:
+                        height = text.Height;
+                        break;
+                    case FontObject.Justifications.CenterLeft:
+                    case FontObject.Justifications.CenterMiddle:
+                    case FontObject.Justifications.CenterRight:
+                        height = text.Height/2.0;
+                        break;
+                }
+
+                Sm.TranslateTransform xformM = new Sm.TranslateTransform(0, -height);
+                
+                double angle = Rg.Vector3d.VectorAngle(input.TextPlane.XAxis, Rg.Vector3d.XAxis, Rg.Plane.WorldXY) / Math.PI * 180.00;
+                Sm.RotateTransform xformR = new Sm.RotateTransform(angle, point.X, point.Y);
+
+                drawingContext.PushTransform(xformR);
+                drawingContext.PushTransform(xformM);
+
+                drawingContext.DrawText(text, point);
+                drawingContext.Pop();
+            }
+
             drawingContext.Close();
 
             if (input.Graphics.PostEffect.EffectType == Effect.EffectTypes.Blur) drawingVisual.Effect = input.Graphics.PostEffect.ToMediaBlurEffect();

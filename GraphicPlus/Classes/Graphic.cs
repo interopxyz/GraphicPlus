@@ -22,8 +22,10 @@ namespace GraphicPlus
         protected Gradient gradient = new Gradient();
 
         protected Effect effect = new Effect();
+        protected FontObject fontObject = new FontObject();
 
         protected Guid guid = Guid.Empty;
+
         #endregion
 
         #region constructors
@@ -45,6 +47,7 @@ namespace GraphicPlus
             this.fillColor = graphic.fillColor;
             this.gradient = new Gradient(graphic.gradient);
             this.effect = new Effect(graphic.effect);
+            this.fontObject = new FontObject(graphic.fontObject);
         }
 
         public Graphic(Color fillColor, Color strokeColor)
@@ -99,6 +102,11 @@ namespace GraphicPlus
             get { return effect; }
         }
 
+        public virtual FontObject Font
+        {
+            get { return fontObject; }
+        }
+
         #endregion
 
         #region methods
@@ -116,6 +124,7 @@ namespace GraphicPlus
                 hash = (hash * 7) + (this.fillColor.GetHashCode());
                 hash = (hash * 7) + (this.gradient.GetHashCode());
                 hash = (hash * 7) + (this.effect.GetHashCode());
+                hash = (hash * 7) + (this.fontObject.GetHashCode());
                 return Math.Abs(hash);
             }
         }
@@ -160,6 +169,11 @@ namespace GraphicPlus
         public void SetShadow(double radius, double distance, double angle)
         {
             this.effect = new Effect(radius,distance,angle);
+        }
+
+        public void SetFont(string family, double size, bool bold, bool italic, bool underline, FontObject.Justifications justification)
+        {
+            this.fontObject = new FontObject(family, size, bold, italic, underline, justification);
         }
 
         #endregion

@@ -161,11 +161,21 @@ namespace GraphicPlus
                 output.AppendLine(shape.ToScript(boundary, S));
                 if (!graphicIds.Contains(shape.Graphics.GetHashCode()))
                 {
-                    graphicIds.Add(shape.Graphics.GetHashCode());
-                    defs.AppendLine(shape.Graphics.ToScript());
-                    if (shape.Graphics.FillType == Graphic.FillTypes.LinearGradient) defs.AppendLine(shape.Graphics.GetLinearGradientScript());
-                    if (shape.Graphics.FillType == Graphic.FillTypes.RadialGradient) defs.AppendLine(shape.Graphics.GetRadialGradientScript());
-                    if (shape.Graphics.PostEffect.EffectType != Effect.EffectTypes.None) defs.AppendLine(shape.Graphics.ToSVGEffect());
+                    switch (shape.PathType)
+                    {
+                        case Shape.PathTypes.Text:
+                            graphicIds.Add(shape.Graphics.GetHashCode());
+                            defs.AppendLine(shape.Graphics.ToScript(6,true));
+                            if (shape.Graphics.PostEffect.EffectType != Effect.EffectTypes.None) defs.AppendLine(shape.Graphics.ToSVGEffect());
+                            break;
+                        default:
+                            graphicIds.Add(shape.Graphics.GetHashCode());
+                            defs.AppendLine(shape.Graphics.ToScript());
+                            if (shape.Graphics.FillType == Graphic.FillTypes.LinearGradient) defs.AppendLine(shape.Graphics.GetLinearGradientScript());
+                            if (shape.Graphics.FillType == Graphic.FillTypes.RadialGradient) defs.AppendLine(shape.Graphics.GetRadialGradientScript());
+                            if (shape.Graphics.PostEffect.EffectType != Effect.EffectTypes.None) defs.AppendLine(shape.Graphics.ToSVGEffect());
+                            break;
+                    }
                 }
                 i++;
             }

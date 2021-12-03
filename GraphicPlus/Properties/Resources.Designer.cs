@@ -143,9 +143,29 @@ namespace GraphicPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap GP_Graphics_Font_01 {
+            get {
+                object obj = ResourceManager.GetObject("GP_Graphics_Font_01", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap GP_Graphics_Stroke_01 {
             get {
                 object obj = ResourceManager.GetObject("GP_Graphics_Stroke_01", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GP_Graphics_Text_01 {
+            get {
+                object obj = ResourceManager.GetObject("GP_Graphics_Text_01", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }

@@ -17,7 +17,7 @@ namespace GraphicPlus
 
         protected Guid id = new Guid();
 
-        public enum PathTypes { None, Path, CompoundPath };
+        public enum PathTypes { None, Path, CompoundPath, Text };
 
         public enum CurveTypes { None, Polyline, Circle, Ellipse, Curve };
 
@@ -27,6 +27,9 @@ namespace GraphicPlus
 
         protected List<CurveTypes> curveTypes = new List<CurveTypes>();
         protected List<NurbsCurve> curves = new List<NurbsCurve>();
+
+        protected string textContent = string.Empty;
+        protected Plane textPlane = Plane.Unset;
 
         #endregion
 
@@ -43,6 +46,19 @@ namespace GraphicPlus
             this.curves = shape.curves;
             this.Graphics = new Graphic(shape.Graphics);
             this.id = shape.id;
+            this.textContent = shape.textContent;
+            this.textPlane = shape.textPlane;
+        }
+
+        public Shape(string text, Plane plane)
+        {
+            this.id = Guid.NewGuid();
+            this.textContent = text;
+            this.textPlane = plane;
+            this.curves.Add(new Line(plane.Origin, plane.Origin + new Vector3d(1, 0, 0)).ToNurbsCurve());
+            this.pathType = PathTypes.Text;
+            this.Graphics.SetStroke(System.Drawing.Color.Transparent, 0);
+            this.Graphics.SetSolidFill(System.Drawing.Color.Black);
         }
 
         public Shape(NurbsCurve curve, Graphic graphic)
@@ -127,6 +143,16 @@ namespace GraphicPlus
             get { return curveTypes; }
         }
 
+        public virtual Plane TextPlane
+        {
+            get { return textPlane; }
+        }
+
+        public virtual string TextContent
+        {
+            get { return textContent; }
+        }
+
         #endregion
 
         #region methods
@@ -173,12 +199,18 @@ namespace GraphicPlus
         public BoundingBox GetBoundingBox()
         {
             BoundingBox boundingBox = BoundingBox.Unset;
-                    foreach (NurbsCurve curve in curves)
-                    {
-                        boundingBox.Union(curve.GetBoundingBox(true));
-                    }
-
-                return boundingBox;
+            if(pathType == PathTypes.Text)
+            {
+                boundingBox.Union(textPlane.Origin);
+            }
+            else
+            { 
+            foreach (NurbsCurve curve in curves)
+            {
+                boundingBox.Union(curve.GetBoundingBox(true));
+            }
+            }
+            return boundingBox;
         }
 
         #endregion
@@ -191,72 +223,102 @@ namespace GraphicPlus
             Plane plane = Plane.WorldZX;
             plane.Origin = boundary.Center;
 
-                switch (pathType)
-                {
-                    case PathTypes.Path:
+            switch (pathType)
+            {
+                case PathTypes.Path:
 
-                        NurbsCurve curve = curves[0].DuplicateCurve().ToNurbsCurve();
-                        curve.Transform(Transform.Mirror(plane));
-                        curve.Translate(new Vector3d(-boundary.Corner(0)));
-                        curve.Transform(Transform.Scale(new Point3d(0, 0, 0), scale));
+                    NurbsCurve curve = curves[0].DuplicateCurve().ToNurbsCurve();
+                    curve.Transform(Transform.Mirror(plane));
+                    curve.Translate(new Vector3d(-boundary.Corner(0)));
+                    curve.Transform(Transform.Scale(new Point3d(0, 0, 0), scale));
 
-                        switch (curveTypes[0])
+                    switch (curveTypes[0])
+                    {
+                        case CurveTypes.Circle:
+                            if (curve.IsClosed)
+                            {
+                                Circle circle = Circle.Unset;
+                                if (curve.TryGetCircle(out circle)) output.Append(circle.ToScript(id.ToString()));
+                            }
+                            else
+                            {
+                                output.Append(curve.ToScript(id.ToString()));
+                            }
+                            break;
+                        case CurveTypes.Ellipse:
+                            if (curve.IsClosed)
+                            {
+                                Ellipse ellipse = new Ellipse();
+                                if (curve.TryGetEllipse(out ellipse)) output.Append(ellipse.ToScript(id.ToString()));
+                            }
+                            else
+                            {
+                                output.Append(curve.ToScript(id.ToString()));
+                            }
+                            break;
+                        case CurveTypes.Polyline:
+                            Polyline polyline = new Polyline();
+                            if (curve.TryGetPolyline(out polyline)) output.Append(polyline.ToScript(id.ToString()));
+                            break;
+                        case CurveTypes.Curve:
+                            output.Append(curve.ToScript(id.ToString()));
+                            break;
+                    }
+                    break;
+                case PathTypes.CompoundPath:
+                    output.Append("<path id=\"compound-" + id.ToString() + "\" d =\"");
+                    for (int i = 0; i < curves.Count; i++)
+                    {
+                        NurbsCurve nurbs = curves[i].DuplicateCurve().ToNurbsCurve();
+                        nurbs.Transform(Transform.Mirror(plane));
+                        nurbs.Translate(new Vector3d(-boundary.Corner(0)));
+                        nurbs.Transform(Transform.Scale(new Point3d(0, 0, 0), scale));
+                        switch (curveTypes[i])
                         {
                             case CurveTypes.Circle:
                                 Circle circle = Circle.Unset;
-                                if (curve.TryGetCircle(out circle)) output.Append(circle.ToScript(id.ToString()));
+                                if (nurbs.TryGetCircle(out circle)) output.Append(circle.ToSubScript());
                                 break;
                             case CurveTypes.Ellipse:
                                 Ellipse ellipse = new Ellipse();
-                                if (curve.TryGetEllipse(out ellipse)) output.Append(ellipse.ToScript(id.ToString()));
+                                if (nurbs.TryGetEllipse(out ellipse))
+                                {
+                                    output.Append(ellipse.ToSubScript());
+                                }
                                 break;
                             case CurveTypes.Polyline:
                                 Polyline polyline = new Polyline();
-                                if (curve.TryGetPolyline(out polyline)) output.Append(polyline.ToScript(id.ToString()));
+                                if (nurbs.TryGetPolyline(out polyline)) output.Append(polyline.ToSubScript());
                                 break;
                             case CurveTypes.Curve:
-                                output.Append(curve.ToScript(id.ToString()));
+                                output.Append(nurbs.ToSubScript());
                                 break;
-                    }
-                    break;
-                    case PathTypes.CompoundPath:
-                        output.Append("<path id=\"compound-" + id.ToString() + "\" d =\"");
-                    for (int i = 0; i < curves.Count; i++)
-                    {
-                            NurbsCurve nurbs = curves[i].DuplicateCurve().ToNurbsCurve();
-                            nurbs.Transform(Transform.Mirror(plane));
-                            nurbs.Translate(new Vector3d(-boundary.Corner(0)));
-                        nurbs.Transform(Transform.Scale(new Point3d(0, 0, 0), scale));
-                        switch (curveTypes[i])
-                            {
-                                case CurveTypes.Circle:
-                                    Circle circle = Circle.Unset;
-                                    if (nurbs.TryGetCircle(out circle)) output.Append(circle.ToSubScript());
-                                    break;
-                                case CurveTypes.Ellipse:
-                                    Ellipse ellipse = new Ellipse();
-                                    if (nurbs.TryGetEllipse(out ellipse))
-                                    {
-                                        output.Append(ellipse.ToSubScript());
-                                    }
-                                    break;
-                                case CurveTypes.Polyline:
-                                    Polyline polyline = new Polyline();
-                                    if (nurbs.TryGetPolyline(out polyline)) output.Append(polyline.ToSubScript());
-                                    break;
-                                case CurveTypes.Curve:
-                                    output.Append(nurbs.ToSubScript());
-                                    break;
-                            }
                         }
+                    }
                     output.Append("\" fill-rule=\"evenodd\"");
-                        break;
+                    break;
+                case PathTypes.Text:
+                    Plane frame = new Plane(textPlane);
+                    NurbsCurve temp = curves[0].DuplicateCurve().ToNurbsCurve();
+                    temp.Transform(Transform.Mirror(plane));
+                    temp.Translate(new Vector3d(-boundary.Corner(0)));
+                    temp.Transform(Transform.Scale(new Point3d(0, 0, 0), scale));
+
+                    frame.Origin = temp.PointAtStart;
+                    output.Append(frame.ToTextScript(textContent, id.ToString()));
+                    break;
             }
             output.Append(" class=\"cls-" + this.Graphics.GetHashCode() + "\" ");
-            if ((this.Graphics.FillType == Graphic.FillTypes.LinearGradient)| (this.Graphics.FillType == Graphic.FillTypes.RadialGradient)) output.Append("fill=\"url('#gr-" + this.Graphics.GetHashCode() + "')\" ");
-            if ((this.Graphics.PostEffect.EffectType!= Effect.EffectTypes.None)) output.Append("filter = \"url(#ef-" + this.Graphics.GetHashCode() + ")\" ");
-            output.Append("/>");
-
+            if (pathType == PathTypes.Text)
+            {
+                output.Append("> " + this.textContent + " </text>");
+            }
+            else
+            {
+                if ((this.Graphics.FillType == Graphic.FillTypes.LinearGradient) | (this.Graphics.FillType == Graphic.FillTypes.RadialGradient)) output.Append("fill=\"url('#gr-" + this.Graphics.GetHashCode() + "')\" ");
+                if ((this.Graphics.PostEffect.EffectType != Effect.EffectTypes.None)) output.Append("filter = \"url(#ef-" + this.Graphics.GetHashCode() + ")\" ");
+                output.Append("/>");
+            }
             return output.ToString();
         }
 

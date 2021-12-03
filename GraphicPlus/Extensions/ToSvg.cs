@@ -156,6 +156,27 @@ namespace GraphicPlus
 
         #endregion
 
+        #region text
+
+        public static string ToTextScript(this Plane input, string content, string id, int digits = 4)
+        {
+            StringBuilder output = new StringBuilder();
+            double angle = Math.Round(Vector3d.VectorAngle(input.XAxis, Vector3d.XAxis, Plane.WorldXY) / Math.PI * 180.00, 6);
+
+            double X = Math.Round(input.Origin.X, digits);
+            double Y = Math.Round(input.Origin.Y, digits);
+
+            output.Append("<text id=\"text-" + id.ToString() + "\" ");
+            output.Append("x=\"" + X + "\" ");
+            output.Append("y=\"" + Y + "\" ");
+            output.Append("transform = \"rotate(" + angle + " " + X + " " + Y + ")\"");
+
+            return output.ToString();
+
+        }
+
+        #endregion
+
         #region graphics
 
         public static string ToSVG(this Color input)
@@ -163,7 +184,7 @@ namespace GraphicPlus
             return ColorTranslator.ToHtml(input)+" ";
         }
 
-        public static string ToScript(this Graphic input, int digits = 6)
+        public static string ToScript(this Graphic input, int digits = 6, bool isText = false)
         {
             StringBuilder output = new StringBuilder();
 
@@ -194,6 +215,44 @@ namespace GraphicPlus
                         output.Append("fill:none; ");
                     }
                     break;
+            }
+
+            if (isText)
+            {
+                output.Append("font-family: " + input.Font.Family + "; ");
+                output.Append("font-size:" + input.Font.Size + "px; ");
+
+                if (input.Font.IsBold) output.Append("font-weight:bold; ");
+                if (input.Font.IsItalic) output.Append("font-style:italic; ");
+                if (input.Font.IsUnderlined) output.Append("text-decoration:underline; ");
+
+                switch (input.Font.Justification)
+                {
+                    case FontObject.Justifications.BottomMiddle:
+                    case FontObject.Justifications.CenterMiddle:
+                    case FontObject.Justifications.TopMiddle:
+                        output.Append("text-anchor:middle; ");
+                        break;
+                    case FontObject.Justifications.BottomRight:
+                    case FontObject.Justifications.CenterRight:
+                    case FontObject.Justifications.TopRight:
+                        output.Append("text-anchor:end; ");
+                        break;
+                }
+
+                switch (input.Font.Justification)
+                {
+                    case FontObject.Justifications.TopLeft:
+                    case FontObject.Justifications.TopMiddle:
+                    case FontObject.Justifications.TopRight:
+                        output.Append("dominant-baseline:hanging; ");
+                        break;
+                    case FontObject.Justifications.CenterLeft:
+                    case FontObject.Justifications.CenterMiddle:
+                    case FontObject.Justifications.CenterRight:
+                        output.Append("dominant-baseline:middle; ");
+                        break;
+                }
             }
 
             output.Append("}");

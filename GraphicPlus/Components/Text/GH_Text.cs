@@ -1,19 +1,18 @@
 ﻿using Grasshopper.Kernel;
-using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
 
-namespace GraphicPlus.Components
+namespace GraphicPlus.Components.Text
 {
-    public class GH_Preview : GH_BaseGraphics
+    public class GH_Text : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the GH_Preview class.
+        /// Initializes a new instance of the GH_Text class.
         /// </summary>
-        public GH_Preview()
-          : base("Shape Preview Beta", "ShpPrev",
-              "A beta fill and stroke preview in Rhino."+Environment.NewLine+ "WARNING: This does not reflect most of the graphic settings in Graphic Plus." + Environment.NewLine + "For an accurate preview use the in canvas viewer components",
+        public GH_Text()
+          : base("Text Shape", "Text",
+              "Construct a Text Shape",
               "Display", "Graphics")
         {
         }
@@ -23,7 +22,7 @@ namespace GraphicPlus.Components
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.tertiary | GH_Exposure.obscure; }
+            get { return GH_Exposure.secondary; }
         }
 
         /// <summary>
@@ -31,7 +30,8 @@ namespace GraphicPlus.Components
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Drawing", "D", "A Drawing object", GH_ParamAccess.item);
+            pManager.AddTextParameter("Text","T","The text to display",GH_ParamAccess.item);
+            pManager.AddPlaneParameter("Plane","P","The plane which sets the location and rotation",GH_ParamAccess.item);
         }
 
         /// <summary>
@@ -39,6 +39,8 @@ namespace GraphicPlus.Components
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
+            pManager.AddGenericParameter("Text Shape", "S", "A Shape Object", GH_ParamAccess.item);
+            pManager.HideParameter(0);
         }
 
         /// <summary>
@@ -47,19 +49,16 @@ namespace GraphicPlus.Components
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Drawing drawing = new Drawing();
-            IGH_Goo goo = null;
-            if (!DA.GetData(0, ref goo)) return;
-            if (goo.CastTo<Drawing>(out drawing))
-            {
-                drawing = new Drawing(drawing);
-            }
+            string text = string.Empty;
+            if (!DA.GetData(0, ref text))return;
 
-            foreach(Shape shape in drawing.Shapes)
-            {
-                prevShapes.Add(shape);
-            }
+            Plane plane = Plane.Unset;
+            if (!DA.GetData(1, ref plane)) return;
 
+            Shape shape = new Shape(text, plane);
+
+
+            DA.SetData(0, shape);
         }
 
         /// <summary>
@@ -71,7 +70,7 @@ namespace GraphicPlus.Components
             {
                 //You can add image files to your project resources and access them like this:
                 // return Resources.IconForThisComponent;
-                return Properties.Resources.GP_Preview_01;
+                return Properties.Resources.GP_Graphics_Text_01;
             }
         }
 
@@ -80,7 +79,7 @@ namespace GraphicPlus.Components
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("35f36ea6-aee3-498e-9aaf-6028fed9e74f"); }
+            get { return new Guid("f19b5802-6361-49dd-885b-d0066ecb43b0"); }
         }
     }
 }

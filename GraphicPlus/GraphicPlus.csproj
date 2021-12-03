@@ -63,6 +63,7 @@
   <ItemGroup>
     <Compile Include="Classes\Drawing.cs" />
     <Compile Include="Classes\Effect.cs" />
+    <Compile Include="Classes\FontObject.cs" />
     <Compile Include="Classes\Gradient.cs" />
     <Compile Include="Classes\GradientStop.cs" />
     <Compile Include="Classes\Graphic.cs" />
@@ -82,6 +83,8 @@
     <Compile Include="Components\Graphics\GH_SetFillSolid.cs" />
     <Compile Include="Components\Graphics\GH_SetStroke.cs" />
     <Compile Include="Components\Extension.cs" />
+    <Compile Include="Components\Text\GH_SetFont.cs" />
+    <Compile Include="Components\Text\GH_Text.cs" />
     <Compile Include="Extensions\ToDotNet.cs" />
     <Compile Include="Extensions\ToSvg.cs" />
     <Compile Include="GraphicPlusInfo.cs" />
@@ -142,6 +145,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GP-Preview-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-Graphics-Text-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-Graphics-Font-01.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

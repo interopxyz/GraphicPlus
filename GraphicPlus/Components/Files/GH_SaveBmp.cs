@@ -27,7 +27,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.tertiary; }
+            get { return GH_Exposure.quarternary; }
         }
 
         /// <summary>
@@ -100,6 +100,8 @@ namespace GraphicPlus.Components.Drawings
                     path = Path.GetDirectoryName(this.OnPingDocument().FilePath) + "\\";
                 }
             }
+
+            if (path.Last() != '\\') path += "\\";
 
             name = name.StripExtension();
 
