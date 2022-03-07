@@ -15,9 +15,13 @@ namespace GraphicPlus
 
         #region members
 
-        protected Guid id = new Guid();
+        protected string id = Guid.NewGuid().ToString();
 
         public enum PathTypes { None, Path, CompoundPath, Text };
+
+        public string Hyperlink = string.Empty;
+        public Dictionary<string, string> Data = new Dictionary<string, string>();
+        public bool HasTitle = false;
 
         public enum CurveTypes { None, Polyline, Circle, Ellipse, Curve };
 
@@ -41,6 +45,9 @@ namespace GraphicPlus
 
         public Shape(Shape shape)
         {
+            this.Data = shape.Data;
+            this.Hyperlink = shape.Hyperlink;
+            this.HasTitle = shape.HasTitle;
             this.pathType = shape.pathType;
             this.curveTypes = shape.curveTypes;
             this.curves = shape.curves;
@@ -52,7 +59,6 @@ namespace GraphicPlus
 
         public Shape(string text, Plane plane)
         {
-            this.id = Guid.NewGuid();
             this.textContent = text;
             this.textPlane = plane;
             this.curves.Add(new Line(plane.Origin, plane.Origin + new Vector3d(1, 0, 0)).ToNurbsCurve());
@@ -63,7 +69,6 @@ namespace GraphicPlus
 
         public Shape(NurbsCurve curve, Graphic graphic)
         {
-            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             this.Graphics = new Graphic(graphic);
             ParseCurves(curve);
@@ -71,40 +76,34 @@ namespace GraphicPlus
 
         public Shape(NurbsCurve curve)
         {
-            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             ParseCurves(curve);
         }
 
         public Shape(Curve curve)
         {
-            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             ParseCurves(curve.ToNurbsCurve());
         }
 
         public Shape(Circle circle)
         {
-            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             ParseCurves(circle);
         }
         public Shape(Ellipse ellipse)
         {
-            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             ParseCurves(ellipse);
         }
         public Shape(Polyline polyline)
         {
-            this.id = Guid.NewGuid();
             this.pathType = PathTypes.Path;
             ParseCurves(polyline);
         }
 
         public Shape(Brep brep)
         {
-            this.id = Guid.NewGuid();
             this.pathType = PathTypes.CompoundPath;
             foreach (BrepLoop loop in brep.Loops)
             {
@@ -114,7 +113,6 @@ namespace GraphicPlus
 
         public Shape(Mesh mesh)
         {
-            this.id = Guid.NewGuid();
             this.pathType = PathTypes.CompoundPath;
             Polyline[] polylines = mesh.GetNakedEdges();
             foreach (Polyline polyline in polylines)
@@ -153,9 +151,24 @@ namespace GraphicPlus
             get { return textContent; }
         }
 
+        public virtual bool HasData
+        {
+            get { return this.Data.Count > 0; }
+        }
+
+        public virtual bool HasLink
+        {
+            get { return this.Hyperlink!=string.Empty; }
+        }
+
         #endregion
 
         #region methods
+
+        public void SetId(string id)
+        {
+            this.id = id;
+        }
 
         protected void ParseCurves(Circle circle)
         {
@@ -222,7 +235,9 @@ namespace GraphicPlus
             StringBuilder output = new StringBuilder();
             Plane plane = Plane.WorldZX;
             plane.Origin = boundary.Center;
-
+            string close = "path";
+            string flatData = "";
+            if (this.HasLink) output.AppendLine("<a xlink:href=\"" + this.Hyperlink + "\" target=\"_blank\">");
             switch (pathType)
             {
                 case PathTypes.Path:
@@ -238,35 +253,38 @@ namespace GraphicPlus
                             if (curve.IsClosed)
                             {
                                 Circle circle = Circle.Unset;
-                                if (curve.TryGetCircle(out circle)) output.Append(circle.ToScript(id.ToString()));
+                                if (curve.TryGetCircle(out circle)) output.Append(circle.ToScript(id));
+                                close = "circle";
                             }
                             else
                             {
-                                output.Append(curve.ToScript(id.ToString()));
+                                output.Append(curve.ToScript(id));
                             }
                             break;
                         case CurveTypes.Ellipse:
                             if (curve.IsClosed)
                             {
                                 Ellipse ellipse = new Ellipse();
-                                if (curve.TryGetEllipse(out ellipse)) output.Append(ellipse.ToScript(id.ToString()));
+                                if (curve.TryGetEllipse(out ellipse)) output.Append(ellipse.ToScript(id)); 
+                                close = "ellipse";
                             }
                             else
                             {
-                                output.Append(curve.ToScript(id.ToString()));
+                                output.Append(curve.ToScript(id));
                             }
                             break;
                         case CurveTypes.Polyline:
                             Polyline polyline = new Polyline();
-                            if (curve.TryGetPolyline(out polyline)) output.Append(polyline.ToScript(id.ToString()));
+                            if (curve.TryGetPolyline(out polyline)) output.Append(polyline.ToScript(id));
+                            close = "polyline";
                             break;
                         case CurveTypes.Curve:
-                            output.Append(curve.ToScript(id.ToString()));
+                            output.Append(curve.ToScript(id));
                             break;
                     }
                     break;
                 case PathTypes.CompoundPath:
-                    output.Append("<path id=\"compound-" + id.ToString() + "\" d =\"");
+                    output.Append("<path id=\"" + id + "\" d =\"");
                     for (int i = 0; i < curves.Count; i++)
                     {
                         NurbsCurve nurbs = curves[i].DuplicateCurve().ToNurbsCurve();
@@ -305,20 +323,39 @@ namespace GraphicPlus
                     temp.Transform(Transform.Scale(new Point3d(0, 0, 0), scale));
 
                     frame.Origin = temp.PointAtStart;
-                    output.Append(frame.ToTextScript(textContent, id.ToString()));
+                    output.Append(frame.ToTextScript(textContent, id));
+                    close = "text";
                     break;
             }
+
+            if (this.HasData)
+            {
+                List<string> tempText = new List<string>();
+                foreach(string key in this.Data.Keys)
+                {
+                    string keyVal = key.Replace(';', '-');
+                    keyVal = keyVal.Replace(' ', '_');
+                    keyVal = keyVal.ToLower();
+                    output.Append(" data-"+ keyVal +"=\""+this.Data[key]+"\"");
+                    tempText.Add(key + " | " + this.Data[key]);
+                }
+                flatData = string.Join("\n", tempText);
+            }
+
             output.Append(" class=\"cls-" + this.Graphics.GetHashCode() + "\" ");
             if (pathType == PathTypes.Text)
             {
-                output.Append("> " + this.textContent + " </text>");
+                output.Append("> " + this.textContent);
             }
             else
             {
                 if ((this.Graphics.FillType == Graphic.FillTypes.LinearGradient) | (this.Graphics.FillType == Graphic.FillTypes.RadialGradient)) output.Append("fill=\"url('#gr-" + this.Graphics.GetHashCode() + "')\" ");
                 if ((this.Graphics.PostEffect.EffectType != Effect.EffectTypes.None)) output.Append("filter = \"url(#ef-" + this.Graphics.GetHashCode() + ")\" ");
-                output.Append("/>");
+                output.Append("> ");
             }
+            if (this.HasTitle & this.HasData) output.Append(" <title>"+ flatData + "</title>");
+            output.Append(" </" + close + ">");
+            if (this.HasLink) output.AppendLine("</a>");
             return output.ToString();
         }
 

@@ -23,7 +23,7 @@ namespace GraphicPlus.Components
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.tertiary | GH_Exposure.obscure; }
+            get { return GH_Exposure.quarternary | GH_Exposure.obscure; }
         }
 
         /// <summary>

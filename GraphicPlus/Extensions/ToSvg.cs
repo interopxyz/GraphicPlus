@@ -89,7 +89,7 @@ namespace GraphicPlus
             double Y = Math.Round(center.Y, digits);
             double R = Math.Round(input.Radius, digits);
 
-            output.Append("<circle id=\"circle-" + id.ToString() + "\" ");
+            output.Append("<circle id=\"" + id + "\" ");
             output.Append("cx=\"" + X + "\" ");
             output.Append("cy=\"" + Y + "\" ");
             output.Append("r=\"" + R + "\" ");
@@ -105,7 +105,7 @@ namespace GraphicPlus
             double X = Math.Round(input.Plane.Origin.X, digits);
             double Y = Math.Round(input.Plane.Origin.Y, digits);
 
-            output.Append("<ellipse id=\"ellipse-" + id.ToString() + "\" ");
+            output.Append("<ellipse id=\"" + id + "\" ");
             output.Append("cx=\"" + X + "\" ");
             output.Append("cy=\"" + Y + "\" ");
             output.Append("rx=\"" + Math.Round(input.Radius1, digits) + "\" ");
@@ -119,7 +119,7 @@ namespace GraphicPlus
         {
             StringBuilder output = new StringBuilder();
 
-                     output.Append("<polyline id=\"polyline-" + id.ToString() + "\" ");
+                     output.Append("<polyline id=\"" + id + "\" ");
             output.Append("points=\"");
             foreach(Point3d point in input)
             {
@@ -137,7 +137,7 @@ namespace GraphicPlus
             double mt = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance;
             BezierCurve[] beziers = BezierCurve.CreateCubicBeziers(input, mt, mt);
 
-            output.Append("<path id =\"curve-"+id.ToString()+"\" ");
+            output.Append("<path id =\""+id+"\" ");
             output.Append("d = \" ");
             output.Append("M " + input.PointAtStart.ToScript());
             foreach (BezierCurve bezier in beziers)
@@ -166,7 +166,7 @@ namespace GraphicPlus
             double X = Math.Round(input.Origin.X, digits);
             double Y = Math.Round(input.Origin.Y, digits);
 
-            output.Append("<text id=\"text-" + id.ToString() + "\" ");
+            output.Append("<text id=\"" + id + "\" ");
             output.Append("x=\"" + X + "\" ");
             output.Append("y=\"" + Y + "\" ");
             output.Append("transform = \"rotate(" + angle + " " + X + " " + Y + ")\"");
@@ -201,6 +201,21 @@ namespace GraphicPlus
             {
                 output.Append("stroke:none; ");
             }
+
+            switch (input.EndCap)
+            {
+                case Graphic.Caps.Square:
+                    output.Append("stroke-linecap:square; ");
+                    output.Append("stroke-linejoin:bevel; ");
+                    break;
+                case Graphic.Caps.Round:
+                    output.Append("stroke-linecap:round; ");
+                    output.Append("stroke-linejoin:round; ");
+                    break;
+                default:
+                    break;
+            }
+
             switch (input.FillType)
             {
                 case Graphic.FillTypes.None:

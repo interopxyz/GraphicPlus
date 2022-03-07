@@ -14,6 +14,9 @@ namespace GraphicPlus
         public enum FillTypes { None,Solid,LinearGradient,RadialGradient};
         protected FillTypes fillType = FillTypes.None;
 
+        public enum Caps { Flat, Square,Round};
+        protected Caps endCap = Caps.Round;
+
         protected Color strokeColor = Color.Black;
         protected double weight = 1.0;
         protected List<double> pattern = new List<double>();
@@ -42,6 +45,7 @@ namespace GraphicPlus
             this.strokeColor = graphic.strokeColor;
             this.weight = graphic.weight;
             this.pattern = graphic.pattern;
+            this.endCap = graphic.endCap;
 
             this.fillType = graphic.fillType;
             this.fillColor = graphic.fillColor;
@@ -107,6 +111,11 @@ namespace GraphicPlus
             get { return fontObject; }
         }
 
+        public virtual Caps EndCap
+        {
+            get { return endCap; }
+        }
+
         #endregion
 
         #region methods
@@ -117,14 +126,15 @@ namespace GraphicPlus
             unchecked
             {
                 int hash = 13;
-                hash = (hash * 7) + (this.fillType.GetHashCode());
-                hash = (hash * 7) + (this.StrokeColor.GetHashCode());
-                hash = (hash * 7) + (this.weight.GetHashCode());
-                hash = (hash * 7) + (string.Join(",", this.pattern).ToString().GetHashCode());
-                hash = (hash * 7) + (this.fillColor.GetHashCode());
-                hash = (hash * 7) + (this.gradient.GetHashCode());
-                hash = (hash * 7) + (this.effect.GetHashCode());
-                hash = (hash * 7) + (this.fontObject.GetHashCode());
+                hash = (hash * 9) + (this.fillType.GetHashCode());
+                hash = (hash * 9) + (this.StrokeColor.GetHashCode());
+                hash = (hash * 9) + (this.weight.GetHashCode());
+                hash = (hash * 9) + (string.Join(",", this.pattern).ToString().GetHashCode());
+                hash = (hash * 9) + (this.endCap.GetHashCode());
+                hash = (hash * 9) + (this.fillColor.GetHashCode());
+                hash = (hash * 9) + (this.gradient.GetHashCode());
+                hash = (hash * 9) + (this.effect.GetHashCode());
+                hash = (hash * 9) + (this.fontObject.GetHashCode());
                 return Math.Abs(hash);
             }
         }
@@ -137,6 +147,21 @@ namespace GraphicPlus
             if (pattern != null)
             {
                 if(pattern.Count>0)
+                {
+                    this.pattern = pattern;
+                }
+            }
+        }
+
+        public void SetStroke(Color color, double weight, Caps cap, List<double> pattern = null)
+        {
+            this.strokeColor = color;
+            this.weight = weight;
+            this.endCap = cap;
+
+            if (pattern != null)
+            {
+                if (pattern.Count > 0)
                 {
                     this.pattern = pattern;
                 }

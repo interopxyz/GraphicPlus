@@ -154,6 +154,12 @@
   <data name="GP_Preview_01" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\GP-Preview-01.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>
+  <data name="GP_SVG_Data_01" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GP-SVG-Data-01.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
+  <data name="GP_SVG_Link_01" type="System.Resources.ResXFileRef, System.Windows.Forms">
+    <value>..\Resources\GP-SVG-Link-01.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
+  </data>
   <data name="GP_SVG_Save_01" type="System.Resources.ResXFileRef, System.Windows.Forms">
     <value>..\Resources\GP-SVG-Save-01.png;System.Drawing.Bitmap, System.Drawing, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a</value>
   </data>

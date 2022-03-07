@@ -1,21 +1,19 @@
 ﻿using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
-namespace GraphicPlus.Components
+namespace GraphicPlus.Components.Data
 {
-    public class GH_SetStroke : GH_Component
+    public class GH_ShapeData : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the SetStroke class.
+        /// Initializes a new instance of the GH_ShapeData class.
         /// </summary>
-        public GH_SetStroke()
-          : base("Stroke", "Stroke",
-              "Applies Stroke properties to a Shape",
+        public GH_ShapeData()
+          : base("Shape Data", "Data",
+              "Optionally override Id and add a series of data items to a Shape.",
               "Display", "Graphics")
         {
         }
@@ -25,7 +23,7 @@ namespace GraphicPlus.Components
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.primary; }
+            get { return GH_Exposure.tertiary; }
         }
 
         /// <summary>
@@ -33,23 +31,15 @@ namespace GraphicPlus.Components
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-
             pManager.AddGenericParameter("Shape / Geometry", "S", "A Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
-            pManager.AddColourParameter("Color", "C", "The stroke color", GH_ParamAccess.item, Color.Black);
+            pManager.AddTextParameter("ID", "I", "An optional id override"+System.Environment.NewLine+"(Note: If overriding this property every value should be unique)", GH_ParamAccess.item);
             pManager[1].Optional = true;
-            pManager.AddNumberParameter("Weight", "W", "The stroke weight", GH_ParamAccess.item, 1);
+            pManager.AddTextParameter("Keys", "K", "A list of titles to be added to the svg element as data-'key'", GH_ParamAccess.list);
             pManager[2].Optional = true;
-            pManager.AddNumberParameter("Pattern", "P", "The stroke pattern", GH_ParamAccess.list);
+            pManager.AddTextParameter("Values", "V", "The values coordinted with the titles to attach to the element", GH_ParamAccess.list);
             pManager[3].Optional = true;
-            pManager.AddIntegerParameter("End Cap", "E", "The shape to be used at the end of open path", GH_ParamAccess.item, 0);
+            pManager.AddBooleanParameter("Hover", "H", "If true the key value pairs will be displayed when the mouse overs over the shape", GH_ParamAccess.item,false);
             pManager[4].Optional = true;
-
-            Param_Integer paramA = (Param_Integer)pManager[4];
-            paramA.AddNamedValue("Flat", 0);
-            paramA.AddNamedValue("Square", 1);
-            paramA.AddNamedValue("Round", 2);
-
-
         }
 
         /// <summary>
@@ -68,22 +58,38 @@ namespace GraphicPlus.Components
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             IGH_Goo goo = null;
-            if(!DA.GetData(0, ref goo))return;
+            if (!DA.GetData(0, ref goo)) return;
             Shape shape = goo.ToShape();
 
-            Color color = Color.Black;
-            DA.GetData(1, ref color);
+            string id = string.Empty;
+            bool hasId = DA.GetData(1, ref id);
 
-            double weight = 1.0;
-            DA.GetData(2, ref weight);
+            List<string> keys = new List<string>();
+            DA.GetDataList(2, keys);
 
-            List<double> pattern = new List<double>();
-            DA.GetDataList(3, pattern);
+            List<string> vals = new List<string>();
+            DA.GetDataList(3, vals);
 
-            int cap = 0;
-            DA.GetData(4, ref cap);
+            bool hasTitle = false;
+            DA.GetData(4, ref hasTitle);
 
-            shape.Graphics.SetStroke(color, weight, (Graphic.Caps)cap, pattern);
+            if (hasId) shape.SetId(id);
+
+            int count = keys.Count;
+            for (int i = vals.Count; i < count; i++) vals.Add(string.Empty);
+
+            for (int i = 0; i < count; i++)
+            {
+                if (!shape.Data.ContainsKey(keys[i]))
+                {
+                    shape.Data.Add(keys[i], vals[i]);
+                }
+                else
+                {
+                    shape.Data[keys[i]] = vals[i];
+                }
+            }
+            shape.HasTitle = hasTitle;
 
             DA.SetData(0, shape);
         }
@@ -97,7 +103,7 @@ namespace GraphicPlus.Components
             {
                 //You can add image files to your project resources and access them like this:
                 // return Resources.IconForThisComponent;
-                return Properties.Resources.GP_Graphics_Stroke_01;
+                return Properties.Resources.GP_SVG_Data_01;
             }
         }
 
@@ -106,7 +112,7 @@ namespace GraphicPlus.Components
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("030b487b-a566-476f-96a4-a0ae2ad283af"); }
+            get { return new Guid("7eea3a07-f271-4f6b-8c9d-1ddc9b1fd002"); }
         }
     }
 }

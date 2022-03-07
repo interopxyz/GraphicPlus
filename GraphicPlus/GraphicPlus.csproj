@@ -68,6 +68,8 @@
     <Compile Include="Classes\GradientStop.cs" />
     <Compile Include="Classes\Graphic.cs" />
     <Compile Include="Classes\Shape.cs" />
+    <Compile Include="Components\Data\GH_ShapeData.cs" />
+    <Compile Include="Components\Data\GH_ShapeLink.cs" />
     <Compile Include="Components\Drawings\GH_ConstructDrawing.cs" />
     <Compile Include="Components\Drawings\GH_DrawingToText.cs" />
     <Compile Include="Components\Drawings\GH_Preview.cs" />
@@ -151,6 +153,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GP-Graphics-Font-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-SVG-Link-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-SVG-Data-01.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

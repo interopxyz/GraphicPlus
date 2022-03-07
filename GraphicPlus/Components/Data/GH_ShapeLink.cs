@@ -1,21 +1,19 @@
 ﻿using Grasshopper.Kernel;
-using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
-using System.Drawing;
 
-namespace GraphicPlus.Components
+namespace GraphicPlus.Components.Data
 {
-    public class GH_SetStroke : GH_Component
+    public class GH_ShapeLink : GH_Component
     {
         /// <summary>
-        /// Initializes a new instance of the SetStroke class.
+        /// Initializes a new instance of the GH_ShapeLink class.
         /// </summary>
-        public GH_SetStroke()
-          : base("Stroke", "Stroke",
-              "Applies Stroke properties to a Shape",
+        public GH_ShapeLink()
+          : base("Shape Link", "Link",
+              "A hyperlink to open when the element is clicked.",
               "Display", "Graphics")
         {
         }
@@ -25,7 +23,7 @@ namespace GraphicPlus.Components
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.primary; }
+            get { return GH_Exposure.tertiary; }
         }
 
         /// <summary>
@@ -33,23 +31,8 @@ namespace GraphicPlus.Components
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-
-            pManager.AddGenericParameter("Shape / Geometry", "S", "A Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
-            pManager.AddColourParameter("Color", "C", "The stroke color", GH_ParamAccess.item, Color.Black);
-            pManager[1].Optional = true;
-            pManager.AddNumberParameter("Weight", "W", "The stroke weight", GH_ParamAccess.item, 1);
-            pManager[2].Optional = true;
-            pManager.AddNumberParameter("Pattern", "P", "The stroke pattern", GH_ParamAccess.list);
-            pManager[3].Optional = true;
-            pManager.AddIntegerParameter("End Cap", "E", "The shape to be used at the end of open path", GH_ParamAccess.item, 0);
-            pManager[4].Optional = true;
-
-            Param_Integer paramA = (Param_Integer)pManager[4];
-            paramA.AddNamedValue("Flat", 0);
-            paramA.AddNamedValue("Square", 1);
-            paramA.AddNamedValue("Round", 2);
-
-
+            pManager.AddGenericParameter("Model", "M", "A Model or Curve, Mesh, or Brep", GH_ParamAccess.item);
+            pManager.AddTextParameter("Hyperlink", "H", "A valid hyperlink to attach to the shape", GH_ParamAccess.item, "https://www.google.com/");
         }
 
         /// <summary>
@@ -68,22 +51,13 @@ namespace GraphicPlus.Components
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             IGH_Goo goo = null;
-            if(!DA.GetData(0, ref goo))return;
+            if (!DA.GetData(0, ref goo)) return;
             Shape shape = goo.ToShape();
 
-            Color color = Color.Black;
-            DA.GetData(1, ref color);
+            string hyperlink = "https://www.google.com/";
+            DA.GetData(1, ref hyperlink);
 
-            double weight = 1.0;
-            DA.GetData(2, ref weight);
-
-            List<double> pattern = new List<double>();
-            DA.GetDataList(3, pattern);
-
-            int cap = 0;
-            DA.GetData(4, ref cap);
-
-            shape.Graphics.SetStroke(color, weight, (Graphic.Caps)cap, pattern);
+            shape.Hyperlink = hyperlink;
 
             DA.SetData(0, shape);
         }
@@ -97,7 +71,7 @@ namespace GraphicPlus.Components
             {
                 //You can add image files to your project resources and access them like this:
                 // return Resources.IconForThisComponent;
-                return Properties.Resources.GP_Graphics_Stroke_01;
+                return Properties.Resources.GP_SVG_Link_01;
             }
         }
 
@@ -106,7 +80,7 @@ namespace GraphicPlus.Components
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("030b487b-a566-476f-96a4-a0ae2ad283af"); }
+            get { return new Guid("41cd5d27-50cf-4978-a146-21e44962f145"); }
         }
     }
 }
