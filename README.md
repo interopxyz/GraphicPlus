@@ -7,6 +7,10 @@ The Graphic Plus Grasshopper plugin converts Grasshopper geometry into Scalable 
 
 [Download Plugin at Food4Rhino](https://www.food4rhino.com/en/app/graphic)
 
+![definition](https://user-images.githubusercontent.com/25797596/158474370-efc29a78-e9a9-4bc8-8037-5fdcd8d05802.png)
+![definition](https://user-images.githubusercontent.com/25797596/158474375-292435f5-bb42-4f4b-b363-f0ed2de681a1.png)
+![definition](https://user-images.githubusercontent.com/25797596/158474352-c4f6d6dc-27cf-4f5d-9dcc-8f3ab64325ca.png)
+
 ## Learn More
 
 [Plugin Documentation](https://interopxyz.gitbook.io/graphic-plus/)
