@@ -31,7 +31,7 @@ namespace GraphicPlus.Components.Data
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Model", "M", "A Model or Curve, Mesh, or Brep", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape / Geometry", "S", "A Graphic Plus Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
             pManager.AddTextParameter("Hyperlink", "H", "A valid hyperlink to attach to the shape", GH_ParamAccess.item, "https://www.google.com/");
         }
 
@@ -40,7 +40,7 @@ namespace GraphicPlus.Components.Data
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape", "S", "A Shape Object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape", "S", "A Graphic Plus Shape Object", GH_ParamAccess.item);
             pManager.HideParameter(0);
         }
 

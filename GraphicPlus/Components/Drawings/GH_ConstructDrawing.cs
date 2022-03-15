@@ -32,7 +32,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shapes / Geometry", "S", "A list of Shapes, or Curves, Breps, Meshes", GH_ParamAccess.list);
+            pManager.AddGenericParameter("Shapes / Geometry", "S", "A list of Graphic Plus Shapes, or Curves, Breps, Meshes", GH_ParamAccess.list);
             pManager.AddRectangleParameter("Boundary", "B", "An optional frame for the drawing. If blank, the shapes bounding box will be used", GH_ParamAccess.item);
             pManager[1].Optional = true;
             pManager.AddNumberParameter("Width", "W", "The width of the output drawing", GH_ParamAccess.item);
@@ -48,7 +48,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Drawing", "D", "A Drawing Object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Drawing", "D", "A Graphic Plus Drawing Object", GH_ParamAccess.item);
             pManager.AddRectangleParameter("Boundary", "B", "The bounding rectangle", GH_ParamAccess.item);
         }
 

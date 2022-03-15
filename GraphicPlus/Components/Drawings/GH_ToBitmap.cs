@@ -22,7 +22,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.quarternary | GH_Exposure.obscure; }
+            get { return GH_Exposure.quinary; }
         }
 
         /// <summary>
@@ -30,7 +30,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Drawing", "D", "A Drawing object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Drawing", "D", "A Graphic Plus Drawing object", GH_ParamAccess.item);
             pManager.AddIntegerParameter("PPI", "S", "The pixel per inch value acts as a scalar multiplier. Must be 96 or above", GH_ParamAccess.item, 96);
             pManager[1].Optional = true;
         }
@@ -40,7 +40,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Bitmap", "B", "A Bitmap of the Drawing", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Bitmap", "B", "A Bitmap Object of the Drawing. (System.Drawing.Bitmap)", GH_ParamAccess.item);
         }
 
         /// <summary>

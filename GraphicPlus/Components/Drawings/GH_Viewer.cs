@@ -32,7 +32,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.quarternary; }
+            get { return GH_Exposure.quinary; }
         }
 
         public override void CreateAttributes()
@@ -46,7 +46,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Drawing", "D", "A Drawing object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Drawing", "D", "A Graphic Plus Drawing object", GH_ParamAccess.item);
             pManager.AddIntegerParameter("Resolution", "R", "The PPI (Pixels Per Inch) resolution for the image which must be greater than or equal to 72.", GH_ParamAccess.item, 96);
             pManager[1].Optional = true;
         }

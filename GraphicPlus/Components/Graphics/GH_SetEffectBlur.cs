@@ -31,7 +31,7 @@ namespace GraphicPlus.Components.Graphics
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape / Geometry", "S", "A Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape / Geometry", "S", "A Graphic Plus Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
             pManager.AddNumberParameter("Blur Radius", "R", "The radius of the blur effect", GH_ParamAccess.item);
             pManager[1].Optional = true;
         }
@@ -42,7 +42,7 @@ namespace GraphicPlus.Components.Graphics
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape", "S", "A Shape Object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape", "S", "A Graphic Plus Shape Object", GH_ParamAccess.item);
             pManager.HideParameter(0);
         }
 

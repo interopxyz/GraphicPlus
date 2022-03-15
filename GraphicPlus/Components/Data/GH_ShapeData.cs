@@ -31,12 +31,12 @@ namespace GraphicPlus.Components.Data
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape / Geometry", "S", "A Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape / Geometry", "S", "A Graphic Plus Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
             pManager.AddTextParameter("ID", "I", "An optional id override"+System.Environment.NewLine+"(Note: If overriding this property every value should be unique)", GH_ParamAccess.item);
             pManager[1].Optional = true;
-            pManager.AddTextParameter("Keys", "K", "A list of titles to be added to the svg element as data-'key'", GH_ParamAccess.list);
+            pManager.AddTextParameter("Keys", "K", "A list of titles to be added to the SVG element as data-'key'", GH_ParamAccess.list);
             pManager[2].Optional = true;
-            pManager.AddTextParameter("Values", "V", "The values coordinted with the titles to attach to the element", GH_ParamAccess.list);
+            pManager.AddTextParameter("Values", "V", "The values coordinated with the titles to attach to the element", GH_ParamAccess.list);
             pManager[3].Optional = true;
             pManager.AddBooleanParameter("Hover", "H", "If true the key value pairs will be displayed when the mouse overs over the shape", GH_ParamAccess.item,false);
             pManager[4].Optional = true;
@@ -47,7 +47,7 @@ namespace GraphicPlus.Components.Data
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape", "S", "A Shape Object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape", "S", "A Graphic Plus Shape Object", GH_ParamAccess.item);
             pManager.HideParameter(0);
         }
 

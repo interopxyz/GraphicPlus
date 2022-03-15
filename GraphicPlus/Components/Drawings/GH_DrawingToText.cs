@@ -12,7 +12,7 @@ namespace GraphicPlus.Components.Drawings
         /// Initializes a new instance of the GH_DrawingToScript class.
         /// </summary>
         public GH_DrawingToText()
-          : base("SVG Text", "SVG txt",
+          : base("SVG Text", "SVGtxt",
               "Converts a Drawing to SVG txt"+Environment.NewLine+"( WARNING: Complex drawings can crash Grasshopper's UI. Use the Save Svg component if this is the case.)",
               "Display", "Graphics")
         {
@@ -23,7 +23,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.quarternary | GH_Exposure.obscure; }
+            get { return GH_Exposure.quinary | GH_Exposure.obscure; }
         }
 
         /// <summary>

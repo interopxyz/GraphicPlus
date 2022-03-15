@@ -14,7 +14,7 @@ namespace GraphicPlus.Components.Drawings
         /// Initializes a new instance of the GH_SaveSvg class.
         /// </summary>
         public GH_SaveSvg()
-          : base("Save Svg", "Save Svg",
+          : base("Save Svg", "SaveSvg",
               "Save a SVG file of a Drawing.",
               "Display", "Graphics")
         {
@@ -25,7 +25,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.quinary; }
+            get { return GH_Exposure.senary; }
         }
 
         /// <summary>
@@ -38,7 +38,7 @@ namespace GraphicPlus.Components.Drawings
             pManager[1].Optional = true;
             pManager.AddTextParameter("File Name", "N", "The filename for the Svg export", GH_ParamAccess.item);
             pManager[2].Optional = true;
-            pManager.AddBooleanParameter("Save", "S", "If true, the new file will be writter or overwritten", GH_ParamAccess.item, false);
+            pManager.AddBooleanParameter("Save", "S", "If true, the new file will be written or overwritten", GH_ParamAccess.item, false);
             pManager[3].Optional = true;
         }
 

@@ -33,7 +33,7 @@ namespace GraphicPlus.Components.Text
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Text Shape", "St", "A Text Shape object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Text Shape", "St", "A Graphic Plus Text Shape object", GH_ParamAccess.item);
             pManager.AddTextParameter("Font Family", "F", "The font family name", GH_ParamAccess.item,"Arial");
             pManager[1].Optional = true;
             pManager.AddNumberParameter("Font Size", "S", "The font size", GH_ParamAccess.item,8);
@@ -60,7 +60,7 @@ namespace GraphicPlus.Components.Text
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape", "S", "A Shape Object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape", "St", "A Graphic Plus Text Shape Object", GH_ParamAccess.item);
             pManager.HideParameter(0);
         }
 

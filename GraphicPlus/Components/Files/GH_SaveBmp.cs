@@ -16,7 +16,7 @@ namespace GraphicPlus.Components.Drawings
         /// Initializes a new instance of the GH_SaveBmp class.
         /// </summary>
         public GH_SaveBmp()
-          : base("Save Bitmap", "Save Bmp",
+          : base("Save Bitmap", "SaveBmp",
               "Save a Bitmap file of a Drawing.",
               "Display", "Graphics")
         {
@@ -27,7 +27,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.quinary; }
+            get { return GH_Exposure.senary; }
         }
 
         /// <summary>

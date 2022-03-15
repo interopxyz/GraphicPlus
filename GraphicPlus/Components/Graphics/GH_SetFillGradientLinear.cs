@@ -32,7 +32,7 @@ namespace GraphicPlus.Components
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape / Geometry", "S", "A Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape / Geometry", "S", "A Graphic Plus Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
             pManager.AddColourParameter("Colors", "C", "The Gradient Stop Colors", GH_ParamAccess.list);
             pManager[1].Optional = true;
             pManager.AddNumberParameter("Parameters", "P", "The Gradient Stop parameters", GH_ParamAccess.list);
@@ -46,7 +46,7 @@ namespace GraphicPlus.Components
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape", "S", "A Shape Object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape", "S", "A Graphic Plus Shape Object", GH_ParamAccess.item);
             pManager.HideParameter(0);
         }
 

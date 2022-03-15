@@ -34,7 +34,7 @@ namespace GraphicPlus.Components
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
 
-            pManager.AddGenericParameter("Shape / Geometry", "S", "A Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape / Geometry", "S", "A Graphic Plus Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
             pManager.AddColourParameter("Color", "C", "The stroke color", GH_ParamAccess.item, Color.Black);
             pManager[1].Optional = true;
             pManager.AddNumberParameter("Weight", "W", "The stroke weight", GH_ParamAccess.item, 1);
@@ -57,7 +57,7 @@ namespace GraphicPlus.Components
         /// </summary>
         protected override void RegisterOutputParams(GH_Component.GH_OutputParamManager pManager)
         {
-            pManager.AddGenericParameter("Shape", "S", "A Shape Object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Shape", "S", "A Graphic Plus Shape Object", GH_ParamAccess.item);
             pManager.HideParameter(0);
         }
 
