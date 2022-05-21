@@ -143,6 +143,7 @@ namespace GraphicPlus
 
             //Setup Canvas
             output.Append(Properties.Resources.svg_header);
+            output.Append("width=\"" + W + "\" height=\"" + H + "\" ");
             output.Append("viewBox = \" " + X + " " + Y + " " + W + " " + H + "\" ");
             output.Append("preserveAspectRatio=\"xMinYMin meet\"");
             output.AppendLine(">");
