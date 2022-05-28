@@ -34,6 +34,16 @@ namespace GraphicPlus
 
         }
 
+        public Drawing(Shape shape)
+        {
+            BoundingBox box = shape.GetBoundingBox();
+            Rectangle3d rect = box.ToRectangle();
+            this.boundary = rect;
+            this.width = rect.Width;
+            this.height = rect.Height;
+            this.shapes.Add(shape);
+        }
+
         public Drawing(Drawing drawing)
         {
             this.boundary = drawing.boundary;
@@ -53,6 +63,20 @@ namespace GraphicPlus
             this.boundary = boundary;
             this.width = width;
             this.height = height;
+        }
+
+        public Drawing(List<Shape> shapes)
+        {
+            BoundingBox box = BoundingBox.Unset;
+            foreach (Shape shape in shapes)
+            {
+                this.shapes.Add(new Shape(shape));
+                box.Union(shape.GetBoundingBox());
+            }
+
+            this.boundary = box.ToRectangle();
+            this.width = this.boundary.Width;
+            this.height = this.boundary.Height;
         }
 
         #endregion
@@ -130,10 +154,26 @@ namespace GraphicPlus
 
         #region methods
 
+        public void MergeDrawing(Drawing drawing)
+        {
+            foreach (Shape shape in drawing.shapes)
+            {
+                this.shapes.Add(new Shape(shape));
+            }
+
+            BoundingBox box = drawing.boundary.BoundingBox;
+            box.Union(this.boundary.BoundingBox);
+
+            if (drawing.Background != Color.Transparent) this.Background = drawing.Background;
+            this.boundary = box.ToRectangle();
+            this.width = Math.Max(drawing.width, this.width);
+            this.height = Math.Max(drawing.width, this.width);
+        }
+
         public string ToScript()
         {
             StringBuilder output = new StringBuilder();
-            Point3d center = boundary.Center;
+
             double W = Math.Round(width, digits);
             double H = Math.Round(height, digits);
 

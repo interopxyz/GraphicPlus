@@ -46,7 +46,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Drawing", "D", "A Graphic Plus Drawing object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Drawings / Shapes / Geometry", "D", "A list of Graphic Plus Drawing, Shapes, or Geometry (Curves, Breps, Meshes).", GH_ParamAccess.list);
             pManager.AddIntegerParameter("Resolution", "R", "The PPI (Pixels Per Inch) resolution for the image which must be greater than or equal to 72.", GH_ParamAccess.item, 96);
             pManager[1].Optional = true;
         }
@@ -65,11 +65,12 @@ namespace GraphicPlus.Components.Drawings
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Drawing drawing = new Drawing();
-            IGH_Goo goo = null;
-            if (!DA.GetData(0, ref goo)) return;
-            if (goo.CastTo<Drawing>(out drawing))
+            List<IGH_Goo> goos = new List<IGH_Goo>();
+            if (!DA.GetDataList(0, goos)) return;
+
+            foreach(IGH_Goo goo in goos)
             {
-                drawing = new Drawing(drawing);
+                goo.TryGetDrawings(ref drawing);
             }
 
             int ppi = 96;
@@ -95,9 +96,11 @@ namespace GraphicPlus.Components.Drawings
         public void SaveImage(Object sender, EventArgs e)
         {
 
-            SaveFileDialog saveFileDialog1 = new SaveFileDialog();
-            saveFileDialog1.Filter = "JPEG Image|*.jpg|PNG Image|*.png|BMP Image|*.bmp|TIFF Image|*.tiff";
-            saveFileDialog1.Title = "Save an Image";
+            SaveFileDialog saveFileDialog1 = new SaveFileDialog
+            {
+                Filter = "JPEG Image|*.jpg|PNG Image|*.png|BMP Image|*.bmp|TIFF Image|*.tiff",
+                Title = "Save an Image"
+            };
             saveFileDialog1.ShowDialog();
 
             // If the file name is not an empty string open it for saving.
@@ -139,9 +142,11 @@ namespace GraphicPlus.Components.Drawings
         public void SaveSVG(Object sender, EventArgs e)
         {
 
-            SaveFileDialog saveFileDialog2 = new SaveFileDialog();
-            saveFileDialog2.Filter = "Scalable Vector Graphics|*.svg";
-            saveFileDialog2.Title = "Save a SVG";
+            SaveFileDialog saveFileDialog2 = new SaveFileDialog
+            {
+                Filter = "Scalable Vector Graphics|*.svg",
+                Title = "Save a SVG"
+            };
             saveFileDialog2.ShowDialog();
 
             if (saveFileDialog2.FileName != "")
@@ -207,9 +212,6 @@ namespace GraphicPlus.Components.Drawings
                 int height = comp.img.Height;
                 Sd.Rectangle rec0 = GH_Convert.ToRectangle(Bounds);
 
-                int cWidth = rec0.Width;
-                int cHeight = rec0.Height;
-
                 rec0.Width = width;
                 rec0.Height += height;
 
@@ -234,13 +236,12 @@ namespace GraphicPlus.Components.Drawings
                     capsule.Render(graphics, Selected, Owner.Locked, true);
                     capsule.AddOutputGrip(this.OutputGrip.Y);
                     capsule.Dispose();
-                    capsule = null;
 
-                    Sd.StringFormat format = new Sd.StringFormat();
-                    format.Alignment = Sd.StringAlignment.Center;
-                    format.LineAlignment = Sd.StringAlignment.Center;
-
-                    Sd.RectangleF textRectangle = ButtonBounds;
+                    Sd.StringFormat format = new Sd.StringFormat
+                    {
+                        Alignment = Sd.StringAlignment.Center,
+                        LineAlignment = Sd.StringAlignment.Center
+                    };
 
                     graphics.DrawImage(comp.img, Bounds.X + 2, m_innerBounds.Y - (ButtonBounds.Height - Bounds.Height), comp.img.Width - 4, comp.img.Height - 2);
 

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace GraphicPlus.Components.Text
 {
-    public class GH_Text : GH_Component
+    public class GH_Text : GH_BaseGraphics
     {
         /// <summary>
         /// Initializes a new instance of the GH_Text class.
@@ -49,6 +49,9 @@ namespace GraphicPlus.Components.Text
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "NOTE: Rhino Previews are limited and do not directly match final outputs."
+                + Environment.NewLine + "For an accurate preview use the in canvas viewer components");
+
             string text = string.Empty;
             if (!DA.GetData(0, ref text))return;
 
@@ -59,6 +62,7 @@ namespace GraphicPlus.Components.Text
 
 
             DA.SetData(0, shape);
+            SetPreview(shape);
         }
 
         /// <summary>

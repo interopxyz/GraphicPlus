@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace GraphicPlus.Components.Text
 {
-    public class GH_SetFont : GH_Component
+    public class GH_SetFont : GH_BaseGraphics
     {
         /// <summary>
         /// Initializes a new instance of the GH_SetFont class.
@@ -70,9 +70,14 @@ namespace GraphicPlus.Components.Text
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "NOTE: Rhino Previews are limited and do not directly match final outputs."
+                + Environment.NewLine + "Font and justification may deviate and underline is not previewed"
+                + Environment.NewLine + "For an accurate preview use the in canvas viewer components");
+
             IGH_Goo goo = null;
             if (!DA.GetData(0, ref goo)) return;
-            Shape shape = goo.ToShape();
+            Shape shape = null;
+            if (!goo.TryGetShape(ref shape)) return;
 
             string family = "Arial";
             DA.GetData(1, ref family);
@@ -95,6 +100,7 @@ namespace GraphicPlus.Components.Text
             if (shape != null) shape.Graphics.SetFont(family,size,isBold,isItalic,isUnderline, (FontObject.Justifications)justify);
 
             DA.SetData(0, shape);
+            SetPreview(shape);
         }
 
         /// <summary>

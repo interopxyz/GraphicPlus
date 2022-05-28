@@ -31,7 +31,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Drawing", "D", "A Drawing object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Drawings / Shapes / Geometry", "D", "A list of Graphic Plus Drawing, Shapes, or Geometry (Curves, Breps, Meshes).", GH_ParamAccess.list);
         }
 
         /// <summary>
@@ -49,11 +49,12 @@ namespace GraphicPlus.Components.Drawings
         protected override void SolveInstance(IGH_DataAccess DA)
         {
             Drawing drawing = new Drawing();
-            IGH_Goo goo = null;
-            if (!DA.GetData(0, ref goo)) return;
-            if (goo.CastTo<Drawing>(out drawing))
+            List<IGH_Goo> goos = new List<IGH_Goo>();
+            if (!DA.GetDataList(0, goos)) return;
+
+            foreach (IGH_Goo goo in goos)
             {
-                drawing = new Drawing(drawing);
+                goo.TryGetDrawings(ref drawing);
             }
 
             DA.SetData(0, drawing.ToScript());

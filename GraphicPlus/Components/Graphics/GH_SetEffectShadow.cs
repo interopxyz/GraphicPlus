@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace GraphicPlus.Components.Graphics
 {
-    public class GH_SetEffectShadow : GH_Component
+    public class GH_SetEffectShadow : GH_BaseGraphics
     {
         /// <summary>
         /// Initializes a new instance of the GH_SetEffectShadow class.
@@ -55,9 +55,14 @@ namespace GraphicPlus.Components.Graphics
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "NOTE: Rhino Previews are limited and do not directly match final outputs."
+                + Environment.NewLine + "The shadow effect cannot be previewed in Rhino"
+                + Environment.NewLine + "For an accurate preview use the in canvas viewer components");
+
             IGH_Goo goo = null;
             if (!DA.GetData(0, ref goo)) return;
-            Shape shape = goo.ToShape();
+            Shape shape = null;
+            if (!goo.TryGetShape(ref shape)) return;
 
             double radius = 1.0;
             DA.GetData(1, ref radius);
@@ -71,6 +76,7 @@ namespace GraphicPlus.Components.Graphics
             shape.Graphics.SetShadow(radius,distance,angle);
 
             DA.SetData(0, shape);
+            SetPreview(shape);
         }
 
         /// <summary>

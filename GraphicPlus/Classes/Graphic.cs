@@ -176,12 +176,14 @@ namespace GraphicPlus
 
         public void SetLinearGradient(List<double> parameters, List<Color> colors, double angle =0)
         {
+            this.fillColor = colors[0];
             this.fillType = FillTypes.LinearGradient;
             this.gradient = new Gradient(parameters, colors,angle);
         }
 
         public void SetRadialGradient(List<double> parameters, List<Color> colors, double x = 0.5, double y = 0.5)
         {
+            this.fillColor = colors[0];
             this.fillType = FillTypes.RadialGradient;
             this.gradient = new Gradient(parameters, colors, x,y);
         }

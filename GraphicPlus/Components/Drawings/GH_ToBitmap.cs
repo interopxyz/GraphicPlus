@@ -1,4 +1,5 @@
 ﻿using Grasshopper.Kernel;
+using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Drawing", "D", "A Graphic Plus Drawing object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Drawings / Shapes / Geometry", "D", "A list of Graphic Plus Drawing, Shapes, or Geometry (Curves, Breps, Meshes).", GH_ParamAccess.list);
             pManager.AddIntegerParameter("PPI", "S", "The pixel per inch value acts as a scalar multiplier. Must be 96 or above", GH_ParamAccess.item, 96);
             pManager[1].Optional = true;
         }
@@ -49,9 +50,15 @@ namespace GraphicPlus.Components.Drawings
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-
             Drawing drawing = new Drawing();
-            if (!DA.GetData<Drawing>(0, ref drawing)) return;
+            List<IGH_Goo> goos = new List<IGH_Goo>();
+            if (!DA.GetDataList(0, goos)) return;
+
+            foreach (IGH_Goo goo in goos)
+            {
+                goo.TryGetDrawings(ref drawing);
+            }
+
 
             int dpi = 96;
             DA.GetData(1, ref dpi);

@@ -4,6 +4,7 @@ using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Rd = Rhino.DocObjects;
 
 namespace GraphicPlus
 {
@@ -113,6 +114,54 @@ namespace GraphicPlus
         public virtual Justifications Justification
         {
             get { return this.justification; }
+        }
+
+        public virtual Rd.TextHorizontalAlignment RhHorizontalAlignment
+        {
+            get 
+            { 
+                Rd.TextHorizontalAlignment align = Rd.TextHorizontalAlignment.Left;
+
+                switch (this.justification)
+                {
+                    case Justifications.BottomMiddle:
+                    case Justifications.CenterMiddle:
+                    case Justifications.TopMiddle:
+                        align = Rd.TextHorizontalAlignment.Center;
+                        break;
+                    case Justifications.BottomRight:
+                    case Justifications.CenterRight:
+                    case Justifications.TopRight:
+                        align = Rd.TextHorizontalAlignment.Right;
+                        break;
+                }
+
+                return align;
+            }
+        }
+
+        public virtual Rd.TextVerticalAlignment RhVerticalAlignment
+        {
+            get
+            {
+                Rd.TextVerticalAlignment align = Rd.TextVerticalAlignment.BottomOfBoundingBox;
+
+                switch (this.justification)
+                {
+                    case Justifications.CenterLeft:
+                    case Justifications.CenterMiddle:
+                    case Justifications.CenterRight:
+                        align = Rd.TextVerticalAlignment.Middle;
+                        break;
+                    case Justifications.TopLeft:
+                    case Justifications.TopMiddle:
+                    case Justifications.TopRight:
+                        align = Rd.TextVerticalAlignment.Top;
+                        break;
+                }
+
+                return align;
+            }
         }
 
         #endregion

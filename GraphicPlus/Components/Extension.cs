@@ -6,10 +6,38 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace GraphicPlus.Components
+namespace GraphicPlus
 {
     public static class Extension
     {
+        public static bool TryGetDrawings(this IGH_Goo input, ref Drawing drawing)
+        {
+            bool status = false;
+            Drawing newDrawing;
+            if (input.CastTo<Drawing>(out newDrawing))
+            {
+                drawing.MergeDrawing(newDrawing);
+                status = true;
+            }
+            else
+            {
+                Shape shape = null;
+                if (input.TryGetShape(ref shape))
+                {
+                    drawing.MergeDrawing(new Drawing(shape));
+                    status = true;
+                }
+            }
+
+            return status;
+        }
+
+
+        public static Rectangle3d ToRectangle(this BoundingBox input)
+        {
+            return new Rectangle3d(Plane.WorldXY, new Point3d(input.Min.X, input.Min.Y, 0), new Point3d(input.Max.X, input.Max.Y, 0));
+        }
+
         public static string StripExtension(this string name)
         {
             string[] parts = name.Split('.');
@@ -47,64 +75,105 @@ namespace GraphicPlus.Components
             return name;
         }
 
-        public static Shape ToShape(this IGH_Goo goo)
+        public static bool TryGetShape(this IGH_Goo goo, ref Shape shape)
         {
-            Shape shape = null;
+            bool isValid = false;
+
             if (goo.CastTo<Shape>(out shape))
             {
                 shape = new Shape(shape);
+                isValid = true;
             }
             else
             {
                 switch (goo.TypeName)
                 {
                     case "NurbsCurve":
-                        NurbsCurve nCurve = null;
-                        if (goo.CastTo<NurbsCurve>(out nCurve)) shape = new Shape(nCurve);
+                        NurbsCurve nCurve;
+                        if (goo.CastTo<NurbsCurve>(out nCurve))
+                        {
+                            shape = new Shape(nCurve);
+                            isValid = true;
+                        }
                         break;
                     case "Curve":
-                        Curve curve = null;
-                        if (goo.CastTo<Curve>(out curve)) shape = new Shape(curve);
+                        Curve curve;
+                        if (goo.CastTo<Curve>(out curve))
+                        {
+                            shape = new Shape(curve);
+                            isValid = true;
+                        }
                         break;
                     case "Arc":
-                        Arc arc = new Arc();
-                        if (goo.CastTo<Arc>(out arc)) shape = new Shape(arc.ToNurbsCurve());
+                        Arc arc;
+                        if (goo.CastTo<Arc>(out arc))
+                        {
+                            shape = new Shape(arc.ToNurbsCurve());
+                            isValid = true;
+                        }
                         break;
                     case "Circle":
-                        Circle circle = new Circle();
-                        if (goo.CastTo<Circle>(out circle)) shape = new Shape(circle);
+                        Circle circle;
+                        if (goo.CastTo<Circle>(out circle))
+                        {
+                            shape = new Shape(circle);
+                            isValid = true;
+                        }
                         break;
                     case "Ellipse":
-                        Ellipse ellipse = new Ellipse();
-                        if (goo.CastTo<Ellipse>(out ellipse)) shape = new Shape(ellipse);
+                        Ellipse ellipse;
+                        if (goo.CastTo<Ellipse>(out ellipse))
+                        {
+                            shape = new Shape(ellipse);
+                            isValid = true;
+                        }
                         break;
                     case "Line":
-                        Line line = new Line();
-                        if (goo.CastTo<Line>(out line)) shape = new Shape(line.ToNurbsCurve());
+                        Line line;
+                        if (goo.CastTo<Line>(out line))
+                        {
+                            shape = new Shape(line.ToNurbsCurve());
+                            isValid = true;
+                        }
                         break;
                     case "Rectangle":
-                        Rectangle3d rect = new Rectangle3d();
-                        if (goo.CastTo<Rectangle3d>(out rect)) shape = new Shape(rect.ToPolyline());
+                        Rectangle3d rect;
+                        if (goo.CastTo<Rectangle3d>(out rect))
+                        {
+                            shape = new Shape(rect.ToPolyline());
+                            isValid = true;
+                        }
                         break;
                     case "Surface":
-                        Surface surface = null;
-                        if (goo.CastTo<Surface>(out surface)) {
+                        Surface surface;
+                        if (goo.CastTo<Surface>(out surface))
+                        {
                             Brep srfBrep = Brep.CreateFromSurface(surface);
                             if (goo.CastTo<Brep>(out srfBrep)) shape = new Shape(srfBrep.DuplicateBrep());
+                            shape = new Shape(srfBrep.DuplicateBrep());
+                            isValid = true;
                         }
                         break;
                     case "Brep":
-                        Brep brep = new Brep();
-                        if (goo.CastTo<Brep>(out brep)) shape = new Shape(brep.DuplicateBrep());
+                        Brep brep;
+                        if (goo.CastTo<Brep>(out brep))
+                        {
+                            shape = new Shape(brep.DuplicateBrep());
+                            isValid = true;
+                        }
                         break;
                     case "Mesh":
-                        Mesh mesh = new Mesh();
-                        if (goo.CastTo<Mesh>(out mesh)) shape = new Shape(mesh.DuplicateMesh());
+                        Mesh mesh;
+                        if (goo.CastTo<Mesh>(out mesh))
+                        {
+                            shape = new Shape(mesh.DuplicateMesh());
+                            isValid = true;
+                        }
                         break;
                 }
             }
 
-            return shape;
+            return isValid;
         }
     }
 }

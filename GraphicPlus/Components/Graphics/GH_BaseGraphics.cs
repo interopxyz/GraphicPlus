@@ -50,44 +50,50 @@ namespace GraphicPlus.Components
         protected override void SolveInstance(IGH_DataAccess DA)
         {
         }
+        protected void SetPreview(Drawing drawing)
+        {
+            foreach (Shape shape in drawing.Shapes) this.prevShapes.Add(shape);
+        }
+
+        protected void SetPreview(List<Shape> shapes)
+        {
+            foreach (Shape shape in shapes) this.prevShapes.Add(new Shape(shape));
+        }
+
+        protected void SetPreview(Shape shape)
+        {
+            this.prevShapes.Add(new Shape(shape));
+        }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
             double mTol = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance;
-            double aTol = Rhino.RhinoDoc.ActiveDoc.ModelAngleToleranceRadians;
+            //double aTol = Rhino.RhinoDoc.ActiveDoc.ModelAngleToleranceRadians;
             //args.Display.ZBiasMode = Rhino.Display.ZBiasMode.TowardsCamera;
 
             // Surfaces
             foreach (Shape shape in prevShapes)
             {
-                if (shape.Graphics.FillType != Graphic.FillTypes.None) {
-                    Hatch[] hatches = Hatch.Create(shape.Curves, 0, 0, 1, mTol);
-
-                    foreach(Hatch hatch in hatches)
+                if (shape.TextContent == string.Empty)
+                {
+                    if (shape.Graphics.FillType != Graphic.FillTypes.None)
                     {
-                        args.Display.DrawHatch(hatch, shape.Graphics.FillColor, Color.Transparent);
+
+                        foreach (Hatch hatch in shape.Hatches)
+                        {
+                            args.Display.DrawHatch(hatch, shape.Graphics.FillColor, Color.Transparent);
+                        }
                     }
 
+                    Transform xform = args.Viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.World, Rhino.DocObjects.CoordinateSystem.Screen);
+                    foreach (Curve curve in shape.Curves)
+                    {
+                        args.Display.DrawCurve(curve, shape.Graphics.StrokeColor, (int)shape.Graphics.Weight);
+                    }
                 }
-
-                Transform xform = args.Viewport.GetTransform(Rhino.DocObjects.CoordinateSystem.World, Rhino.DocObjects.CoordinateSystem.Screen);
-                foreach (Curve curve in shape.Curves)
+                else
                 {
-                    //Polyline polyline = curve.ToPolyline(mTol, aTol, mTol*100, 1000000).ToPolyline();
-                    //Line[] lines = polyline.GetSegments();
-                    //foreach(Line line in lines)
-                    //{
-
-                    //    Point3d ptA = new Point3d(line.From);
-                    //    ptA.Transform(xform);
-
-                    //    Point3d ptB = new Point3d(line.To);
-                    //    ptB.Transform(xform);
-
-                    //    args.Display.Draw2dLine(new PointF((float)ptA.X, (float)ptA.Y), new PointF((float)ptB.X, (float)ptB.Y), shape.Graphics.StrokeColor, (float)(shape.Graphics.Weight*2.0));
-                    //}
-
-                    args.Display.DrawCurve(curve, shape.Graphics.StrokeColor, (int)shape.Graphics.Weight);
+                    args.Display.Draw3dText(shape.TextContent, shape.Graphics.FillColor, shape.TextPlane, shape.Graphics.Font.Size/2.0, shape.Graphics.Font.Family, shape.Graphics.Font.IsBold, shape.Graphics.Font.IsItalic, shape.Graphics.Font.RhHorizontalAlignment, shape.Graphics.Font.RhVerticalAlignment);
                 }
             }
 

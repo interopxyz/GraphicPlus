@@ -52,7 +52,8 @@ namespace GraphicPlus.Components.Data
         {
             IGH_Goo goo = null;
             if (!DA.GetData(0, ref goo)) return;
-            Shape shape = goo.ToShape();
+            Shape shape = null;
+            if (!goo.TryGetShape(ref shape)) return;
 
             string hyperlink = "https://www.google.com/";
             DA.GetData(1, ref hyperlink);

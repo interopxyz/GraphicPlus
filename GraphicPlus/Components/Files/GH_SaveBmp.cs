@@ -35,7 +35,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
-            pManager.AddGenericParameter("Drawing", "D", "A Drawing Object", GH_ParamAccess.item);
+            pManager.AddGenericParameter("Drawings / Shapes / Geometry", "D", "A list of Graphic Plus Drawing, Shapes, or Geometry (Curves, Breps, Meshes).", GH_ParamAccess.list);
             pManager.AddTextParameter("Folder Path", "F", "The folder path to save the file", GH_ParamAccess.item);
             pManager[1].Optional = true;
             pManager.AddTextParameter("File Name", "N", "The file name for the bitmap", GH_ParamAccess.item);
@@ -68,17 +68,20 @@ namespace GraphicPlus.Components.Drawings
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            IGH_Goo goo = null;
-
-            if (!DA.GetData(0, ref goo)) return;
             Drawing drawing = new Drawing();
-            if (!goo.CastTo<Drawing>(out drawing)) return; ;
+            List<IGH_Goo> goos = new List<IGH_Goo>();
+            if (!DA.GetDataList(0, goos)) return;
+
+            foreach (IGH_Goo goo in goos)
+            {
+                goo.TryGetDrawings(ref drawing);
+            }
 
             string path = "C:\\Users\\Public\\Documents\\";
             bool hasPath = DA.GetData(1, ref path);
 
             string name = DateTime.UtcNow.ToString("yyyy-dd-M_HH-mm-ss");
-            bool hasName = DA.GetData(2, ref name);
+             DA.GetData(2, ref name);
 
             int extension = 0;
             DA.GetData(3, ref extension);

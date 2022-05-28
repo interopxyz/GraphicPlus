@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace GraphicPlus.Components.Drawings
 {
-    public class GH_ConstructDrawing : GH_Component
+    public class GH_ConstructDrawing : GH_BaseGraphics
     {
         /// <summary>
         /// Initializes a new instance of the GH_ConstructDrawing class.
@@ -32,6 +32,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
+
             pManager.AddGenericParameter("Shapes / Geometry", "S", "A list of Graphic Plus Shapes, or Curves, Breps, Meshes", GH_ParamAccess.list);
             pManager.AddRectangleParameter("Boundary", "B", "An optional frame for the drawing. If blank, the shapes bounding box will be used", GH_ParamAccess.item);
             pManager[1].Optional = true;
@@ -58,6 +59,9 @@ namespace GraphicPlus.Components.Drawings
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "NOTE: Rhino Previews are limited and do not directly match final outputs."
+                + Environment.NewLine + "For an accurate preview use the in canvas viewer components");
+
             List<Shape> shapes = new List<Shape>();
             List <IGH_Goo> goos = new List<IGH_Goo>();
             if (!DA.GetDataList(0, goos)) return;
@@ -66,9 +70,12 @@ namespace GraphicPlus.Components.Drawings
 
             foreach (IGH_Goo goo in goos)
             {
-                Shape shape = goo.ToShape();
-                box.Union(shape.GetBoundingBox());
-                shapes.Add(shape);
+                Shape shape = null;
+                if (goo.TryGetShape(ref shape))
+                {
+                    box.Union(shape.GetBoundingBox());
+                    shapes.Add(shape);
+                }
             }
 
             Rectangle3d boundary = Rectangle3d.Unset;
@@ -88,12 +95,15 @@ namespace GraphicPlus.Components.Drawings
             Color background = Color.Transparent;
             DA.GetData(4, ref background);
 
-            Drawing drawing = new Drawing(shapes, boundary, width, height);
-            drawing.Background = background;
+            Drawing drawing = new Drawing(shapes, boundary, width, height)
+            {
+                Background = background
+            };
             //prevShapes.AddRange(shapes);
 
             DA.SetData(0, drawing);
             DA.SetData(1, boundary);
+            SetPreview(drawing);
         }
 
         /// <summary>

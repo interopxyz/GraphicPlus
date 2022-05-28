@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace GraphicPlus.Components
 {
-    public class GH_SetFillGradientRadial : GH_Component
+    public class GH_SetFillGradientRadial : GH_BaseGraphics
     {
         /// <summary>
         /// Initializes a new instance of the SetFillGradientRadial class.
@@ -59,9 +59,14 @@ namespace GraphicPlus.Components
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "NOTE: Rhino Previews are limited and do not directly match final outputs."
+                + Environment.NewLine + "Gradients cannot be previewed in Rhino, the first color will be displayed in its place."
+                + Environment.NewLine + "For an accurate preview use the in canvas viewer components");
+
             IGH_Goo goo = null;
             if (!DA.GetData(0, ref goo)) return;
-            Shape shape = goo.ToShape();
+            Shape shape = null;
+            if (!goo.TryGetShape(ref shape)) return;
 
             List<Color> colors = new List<Color>();
             DA.GetDataList(1, colors);
@@ -88,6 +93,7 @@ namespace GraphicPlus.Components
             shape.Graphics.SetRadialGradient(parameters, colors, X,Y);
 
             DA.SetData(0, shape);
+            SetPreview(shape);
         }
 
         /// <summary>

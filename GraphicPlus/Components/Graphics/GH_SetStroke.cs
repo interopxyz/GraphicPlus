@@ -8,7 +8,7 @@ using System.Drawing;
 
 namespace GraphicPlus.Components
 {
-    public class GH_SetStroke : GH_Component
+    public class GH_SetStroke : GH_BaseGraphics
     {
         /// <summary>
         /// Initializes a new instance of the SetStroke class.
@@ -49,7 +49,6 @@ namespace GraphicPlus.Components
             paramA.AddNamedValue("Square", 1);
             paramA.AddNamedValue("Round", 2);
 
-
         }
 
         /// <summary>
@@ -67,9 +66,14 @@ namespace GraphicPlus.Components
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
+            this.AddRuntimeMessage(GH_RuntimeMessageLevel.Remark, "NOTE: Rhino Previews are limited and do not directly match final outputs."
+                + Environment.NewLine + "Lineweight previews are an approximation and scale according to the zoom level."
+                + Environment.NewLine + "For an accurate preview use the in canvas viewer components");
+
             IGH_Goo goo = null;
             if(!DA.GetData(0, ref goo))return;
-            Shape shape = goo.ToShape();
+            Shape shape = null;
+            if (!goo.TryGetShape(ref shape)) return;
 
             Color color = Color.Black;
             DA.GetData(1, ref color);
@@ -86,6 +90,7 @@ namespace GraphicPlus.Components
             shape.Graphics.SetStroke(color, weight, (Graphic.Caps)cap, pattern);
 
             DA.SetData(0, shape);
+            SetPreview(shape);
         }
 
         /// <summary>
