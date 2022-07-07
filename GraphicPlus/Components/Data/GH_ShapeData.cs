@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace GraphicPlus.Components.Data
 {
-    public class GH_ShapeData : GH_Component
+    public class GH_ShapeData : GH_BaseSave
     {
         /// <summary>
         /// Initializes a new instance of the GH_ShapeData class.
@@ -93,6 +93,7 @@ namespace GraphicPlus.Components.Data
             shape.HasTitle = hasTitle;
 
             DA.SetData(0, shape);
+            prevDrawing.MergeDrawing(shape);
         }
 
         /// <summary>

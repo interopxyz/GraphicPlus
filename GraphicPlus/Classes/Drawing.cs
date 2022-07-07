@@ -18,8 +18,9 @@ namespace GraphicPlus
 
         protected double width = 0;
         protected double height = 0;
+        protected int dpi = 96;
 
-        protected Rectangle3d boundary = new Rectangle3d();
+        protected Rectangle3d boundary = Rectangle3d.Unset;
 
         public Color Background = Color.Transparent;
 
@@ -51,11 +52,12 @@ namespace GraphicPlus
             this.height = drawing.height;
             this.Background = drawing.Background;
             this.shapes = drawing.shapes;
+            this.dpi = drawing.dpi;
         }
 
         public Drawing(List<Shape> shapes, Rectangle3d boundary, double width, double height)
         {
-            foreach(Shape shape in shapes)
+            foreach (Shape shape in shapes)
             {
                 this.shapes.Add(new Shape(shape));
             }
@@ -82,6 +84,12 @@ namespace GraphicPlus
         #endregion
 
         #region properties
+
+        public virtual int Dpi
+        {
+            get { return dpi; }
+            set { dpi = Math.Max(value, 72); }
+            }
 
         public virtual List<Shape> Shapes
         {
@@ -154,7 +162,17 @@ namespace GraphicPlus
 
         #region methods
 
-        public void MergeDrawing(Drawing drawing)
+        public void MergeDrawing(List<Shape> shapes)
+        {
+            MergeDrawing(new Drawing(shapes));
+        }
+
+        public void MergeDrawing(Shape shape)
+        {
+            MergeDrawing(new Drawing(shape));
+        }
+
+            public void MergeDrawing(Drawing drawing)
         {
             foreach (Shape shape in drawing.shapes)
             {
@@ -167,7 +185,7 @@ namespace GraphicPlus
             if (drawing.Background != Color.Transparent) this.Background = drawing.Background;
             this.boundary = box.ToRectangle();
             this.width = Math.Max(drawing.width, this.width);
-            this.height = Math.Max(drawing.width, this.width);
+            this.height = Math.Max(drawing.height, this.height);
         }
 
         public string ToScript()

@@ -254,9 +254,10 @@ namespace GraphicPlus
         /// <returns>System Windows Vector</returns>
         public static Sh.Path ToPath(this Rg.Line input)
         {
-            Sh.Path path = new Sh.Path();
-
-            path.Data = input.ToGeometry();
+            Sh.Path path = new Sh.Path
+            {
+                Data = input.ToGeometry()
+            };
 
             return path;
         }
@@ -268,9 +269,10 @@ namespace GraphicPlus
         /// <returns>System Windows Shapes Path</returns>
         public static Sh.Path ToPath(this Rg.Circle input)
         {
-            Sh.Path path = new Sh.Path();
-
-            path.Data = input.ToGeometry();
+            Sh.Path path = new Sh.Path
+            {
+                Data = input.ToGeometry()
+            };
 
             return path;
         }
@@ -282,9 +284,10 @@ namespace GraphicPlus
         /// <returns>System Windows Shapes Path</returns>
         public static Sh.Path ToPath(this Rg.Ellipse input)
         {
-            Sh.Path path = new Sh.Path();
-
-            path.Data = input.ToGeometry();
+            Sh.Path path = new Sh.Path
+            {
+                Data = input.ToGeometry()
+            };
 
             return path;
         }
@@ -296,9 +299,10 @@ namespace GraphicPlus
         /// <returns>System Windows Shapes Path</returns>
         public static Sh.Path ToPath(this Rg.Arc input)
         {
-            Sh.Path path = new Sh.Path();
-
-            path.Data = input.ToGeometry();
+            Sh.Path path = new Sh.Path
+            {
+                Data = input.ToGeometry()
+            };
 
             return path;
         }
@@ -310,9 +314,10 @@ namespace GraphicPlus
         /// <returns>System Windows Shapes Path</returns>
         public static Sh.Path ToPath(this Rg.Rectangle3d input)
         {
-            Sh.Path path = new Sh.Path();
-
-            path.Data = input.ToGeometry();
+            Sh.Path path = new Sh.Path
+            {
+                Data = input.ToGeometry()
+            };
 
             return path;
         }
@@ -324,9 +329,10 @@ namespace GraphicPlus
         /// <returns>System Windows Shapes Path</returns>
         public static Sh.Path ToPath(this Rg.Polyline input)
         {
-            Sh.Path path = new Sh.Path();
-
-            path.Data = input.ToGeometry();
+            Sh.Path path = new Sh.Path
+            {
+                Data = input.ToGeometry()
+            };
 
             return path;
         }
@@ -338,9 +344,10 @@ namespace GraphicPlus
         /// <returns>System Windows Shapes Path</returns>
         public static Sh.Path ToPath(this Rg.Curve input)
         {
-            Sh.Path path = new Sh.Path();
-
-            path.Data = input.ToGeometry();
+            Sh.Path path = new Sh.Path
+            {
+                Data = input.ToGeometry()
+            };
 
             return path;
         }
@@ -455,12 +462,18 @@ namespace GraphicPlus
         {
             Sm.DrawingVisual drawing = new Sm.DrawingVisual();
             Rg.Point3d origin = input.Boundary.Corner(0);
-            origin.X -= (input.Width / input.Boundary.Width * input.Scale);
-            origin.Y -= (input.Height / input.Boundary.Height*input.Scale);
+            double rX = input.Boundary.Width * input.Scale;
+            double rY = input.Boundary.Height * input.Scale;
+            origin.X -= (input.Width / rX);
+            origin.Y += (input.Height / rY);
 
-            Rg.NurbsCurve rect = new Rg.Rectangle3d(new Rg.Plane(origin, Rg.Vector3d.XAxis, Rg.Vector3d.YAxis), input.Width, input.Height).ToNurbsCurve();
-
-            drawing.Children.Add(new Shape(rect, new Graphic(input.Background, Sd.Color.Transparent)).ToVisualDrawing(input));
+            Sm.DrawingVisual background = new Sm.DrawingVisual();
+            Sm.DrawingContext bgC = background.RenderOpen();
+            Sw.Rect rect = new Sw.Rect(0, 0, input.Width, input.Height);
+            bgC.DrawRectangle(new Sm.SolidColorBrush(input.Background.ToMediaColor()),null, new Sw.Rect(0, 0, input.Width, input.Height));
+            bgC.Close();
+            
+            drawing.Children.Add(background);
 
             foreach (Shape shape in input.Shapes)
             {
@@ -527,7 +540,7 @@ namespace GraphicPlus
 
         public static Sm.Brush ToMediaBrush(this Graphic input)
         {
-            Sm.Brush brush = null;
+            Sm.Brush brush;
             switch (input.FillType)
             {
                 default:
@@ -537,7 +550,7 @@ namespace GraphicPlus
                     brush = input.FillGradient.ToMediaLinearGradientBrush();
                     break;
                 case Graphic.FillTypes.RadialGradient:
-                    brush = brush = input.FillGradient.ToMediaRadialGradientBrush();
+                    brush = input.FillGradient.ToMediaRadialGradientBrush();
                     break;
             }
 
@@ -590,9 +603,9 @@ namespace GraphicPlus
         #region Drawing to Bitmap
 
         // Bitmap from Drawing
-        public static Sd.Bitmap ToBitmap(this Drawing drawing, int resolution )
+        public static Sd.Bitmap ToBitmap(this Drawing drawing)
         {
-            return drawing.ToGeometryVisual().ToBitmap(drawing.Width, drawing.Height, resolution, new Si.PngBitmapEncoder());
+            return drawing.ToGeometryVisual().ToBitmap(drawing.Width, drawing.Height, drawing.Dpi, new Si.PngBitmapEncoder());
         }
 
         // Bitmap from Visual, Width, and Height
@@ -622,17 +635,21 @@ namespace GraphicPlus
 
         public static Se.BlurEffect ToMediaBlurEffect(this Effect input)
         {
-            Se.BlurEffect output = new Se.BlurEffect();
-            output.Radius = input.Radius;
+            Se.BlurEffect output = new Se.BlurEffect
+            {
+                Radius = input.Radius
+            };
             return output;
         }
 
         public static Se.DropShadowEffect ToMediaShadowEffect(this Effect input)
         {
-            Se.DropShadowEffect output = new Se.DropShadowEffect();
-            output.BlurRadius = input.Radius;
-            output.Direction = input.Angle + 90;
-            output.ShadowDepth = input.Distance;
+            Se.DropShadowEffect output = new Se.DropShadowEffect
+            {
+                BlurRadius = input.Radius,
+                Direction = input.Angle + 90,
+                ShadowDepth = input.Distance
+            };
 
             return output;
         }

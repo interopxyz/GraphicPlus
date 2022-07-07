@@ -6,12 +6,12 @@ using System.Collections.Generic;
 
 namespace GraphicPlus.Components
 {
-    public class GH_Preview : GH_BaseGraphics
+    public class GH_PreviewDrwaing : GH_BaseGraphics
     {
         /// <summary>
         /// Initializes a new instance of the GH_Preview class.
         /// </summary>
-        public GH_Preview()
+        public GH_PreviewDrwaing()
           : base("Shape Preview Beta", "ShpPrev",
               "A beta fill and stroke preview in Rhino."+Environment.NewLine+ "WARNING: This does not reflect most of the graphic settings in Graphic Plus." + Environment.NewLine + "For an accurate preview use the in canvas viewer components",
               "Display", "Graphics")
@@ -23,7 +23,7 @@ namespace GraphicPlus.Components
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.quinary | GH_Exposure.obscure; }
+            get { return GH_Exposure.quinary; }
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace GraphicPlus.Components
             {
                 //You can add image files to your project resources and access them like this:
                 // return Resources.IconForThisComponent;
-                return Properties.Resources.GP_Preview_01;
+                return Properties.Resources.GP_Rh_Preview7_01;
             }
         }
 

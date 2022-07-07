@@ -23,7 +23,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.quinary; }
+            get { return GH_Exposure.senary; }
         }
 
         /// <summary>
@@ -61,10 +61,9 @@ namespace GraphicPlus.Components.Drawings
 
 
             int dpi = 96;
-            DA.GetData(1, ref dpi);
-            if (dpi < 96) dpi = 96;
+            if (DA.GetData(1, ref dpi)) drawing.Dpi = dpi;
 
-            DA.SetData(0, drawing.ToBitmap(dpi));
+            DA.SetData(0, drawing.ToBitmap());
         }
 
         /// <summary>
