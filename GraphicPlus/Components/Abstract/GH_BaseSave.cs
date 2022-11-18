@@ -29,6 +29,11 @@ namespace GraphicPlus.Components
         {
         }
 
+        protected override void BeforeSolveInstance()
+        {
+            prevDrawing = new Drawing();
+        }
+
         /// <summary>
         /// Registers all the input parameters for this component.
         /// </summary>
