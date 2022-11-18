@@ -74,12 +74,13 @@
     <Compile Include="Components\Data\GH_ShapeLink.cs" />
     <Compile Include="Components\Drawings\GH_ConstructDrawing.cs" />
     <Compile Include="Components\Drawings\GH_DrawingToText.cs" />
-    <Compile Include="Components\Drawings\GH_Preview.cs" />
+    <Compile Include="Components\Drawings\GH_PreviewDrawing.cs" />
+    <Compile Include="Components\Abstract\GH_BaseSave.cs" />
     <Compile Include="Components\Files\GH_SaveBmp.cs" />
     <Compile Include="Components\Drawings\GH_Viewer.cs" />
     <Compile Include="Components\Files\GH_SaveSvg.cs" />
     <Compile Include="Components\Drawings\GH_ToBitmap.cs" />
-    <Compile Include="Components\Graphics\GH_BaseGraphics.cs" />
+    <Compile Include="Components\Abstract\GH_BaseGraphics.cs" />
     <Compile Include="Components\Graphics\GH_SetEffectBlur.cs" />
     <Compile Include="Components\Graphics\GH_SetEffectShadow.cs" />
     <Compile Include="Components\Graphics\GH_SetFillGradientLinear.cs" />
@@ -110,58 +111,64 @@
     <None Include="Resources\GraphicsPlus_300.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GP-Viewer-01.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GP-Bitmap-01.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\GP-Bmp-Save-01.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GP-DrawingA-01.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GP-EffectsBlur-01.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\GP-EffectsShadow-01.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GP-Graphics-Fill-Gradient-Linear-01.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GP-Graphics-Fill-Gradient-Radial-01.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GP-Graphics-Fill-Solid-01.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GP-Graphics-Stroke-01.png" />
-  </ItemGroup>
-  <ItemGroup>
     <None Include="Resources\GP-SVG-Save-01.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\GP-SVG-Text-01.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GraphicsPlus_24.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GP-Preview-01.png" />
+    <None Include="Resources\GP-Graphics-Fill-Gradient-Radial-B-01.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GP-Graphics-Text-01.png" />
+    <None Include="Resources\GP-SVG-Data-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-Graphics-Fill-Solid-D-01.png" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GP-Graphics-Font-01.png" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Resources\GP-Graphics-Stroke-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-Graphics-Text-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-Rh_Preview7-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-Rh_Viewer4-01.png" />
+  </ItemGroup>
+  <ItemGroup>
     <None Include="Resources\GP-SVG-Link-01.png" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Resources\GP-SVG-Data-01.png" />
+    <None Include="Resources\GP-SVG-Text-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-Bitmap-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-EffectsBlur-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-Graphics-Fill-Gradient-Linear-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-Graphics-Fill-Solid-A-01.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

@@ -8,7 +8,7 @@ using System.Linq;
 
 namespace GraphicPlus.Components.Drawings
 {
-    public class GH_SaveSvg : GH_Component
+    public class GH_SaveSvg : GH_BaseSave
     {
         /// <summary>
         /// Initializes a new instance of the GH_SaveSvg class.
@@ -25,7 +25,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.senary; }
+            get { return GH_Exposure.septenary; }
         }
 
         /// <summary>
@@ -109,6 +109,7 @@ namespace GraphicPlus.Components.Drawings
                 DA.SetData(0, filepath);
             }
 
+            prevDrawing.MergeDrawing(drawing);
         }
 
         /// <summary>

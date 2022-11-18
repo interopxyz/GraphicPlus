@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace GraphicPlus.Components.Data
 {
-    public class GH_ShapeLink : GH_Component
+    public class GH_ShapeLink : GH_BaseSave
     {
         /// <summary>
         /// Initializes a new instance of the GH_ShapeLink class.
@@ -61,6 +61,7 @@ namespace GraphicPlus.Components.Data
             shape.Hyperlink = hyperlink;
 
             DA.SetData(0, shape);
+            prevDrawing.MergeDrawing(shape);
         }
 
         /// <summary>

@@ -10,7 +10,7 @@ using System.Linq;
 
 namespace GraphicPlus.Components.Drawings
 {
-    public class GH_SaveBmp : GH_Component
+    public class GH_SaveBmp : GH_BaseSave
     {
         /// <summary>
         /// Initializes a new instance of the GH_SaveBmp class.
@@ -27,7 +27,7 @@ namespace GraphicPlus.Components.Drawings
         /// </summary>
         public override GH_Exposure Exposure
         {
-            get { return GH_Exposure.senary; }
+            get { return GH_Exposure.septenary; }
         }
 
         /// <summary>
@@ -87,11 +87,11 @@ namespace GraphicPlus.Components.Drawings
             DA.GetData(3, ref extension);
             if (extension < 0) extension = 0;
             if (extension > 3) extension = 3;
-            int ppi = 96;
-            DA.GetData(4, ref ppi);
-            if (ppi < 72) ppi = 72;
 
-            Bitmap bitmap = drawing.ToBitmap(ppi);
+            int dpi = 96;
+            if (DA.GetData(4, ref dpi)) drawing.Dpi = dpi;
+
+            Bitmap bitmap = drawing.ToBitmap();
 
             bool save = false;
             DA.GetData(5, ref save);
@@ -144,6 +144,8 @@ namespace GraphicPlus.Components.Drawings
 
                 DA.SetData(0, filepath);
             }
+
+            prevDrawing.MergeDrawing(drawing);
         }
 
         /// <summary>

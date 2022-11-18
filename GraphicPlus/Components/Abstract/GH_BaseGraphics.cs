@@ -6,9 +6,8 @@ using System.Drawing;
 
 namespace GraphicPlus.Components
 {
-    public abstract class GH_BaseGraphics : GH_Component
+    public abstract class GH_BaseGraphics : GH_BaseSave
     {
-        protected List<Shape> prevShapes = new List<Shape>();
 
         /// <summary>
         /// Initializes a new instance of the GH_BaseGraphics class.
@@ -22,11 +21,6 @@ namespace GraphicPlus.Components
 
         public GH_BaseGraphics(string Name, string NickName, string Description, string Category, string Subcategory) : base(Name, NickName, Description, Category, Subcategory)
         {
-        }
-
-        protected override void BeforeSolveInstance()
-        {
-            prevShapes = new List<Shape>();
         }
 
         /// <summary>
@@ -50,29 +44,28 @@ namespace GraphicPlus.Components
         protected override void SolveInstance(IGH_DataAccess DA)
         {
         }
+
         protected void SetPreview(Drawing drawing)
         {
-            foreach (Shape shape in drawing.Shapes) this.prevShapes.Add(shape);
-        }
-
-        protected void SetPreview(List<Shape> shapes)
-        {
-            foreach (Shape shape in shapes) this.prevShapes.Add(new Shape(shape));
+            prevDrawing.MergeDrawing(drawing);
         }
 
         protected void SetPreview(Shape shape)
         {
-            this.prevShapes.Add(new Shape(shape));
+            prevDrawing.MergeDrawing(shape);
+        }
+
+        protected void SetPreview(List<Shape> shapes)
+        {
+            prevDrawing.MergeDrawing(shapes);
         }
 
         public override void DrawViewportWires(IGH_PreviewArgs args)
         {
             double mTol = Rhino.RhinoDoc.ActiveDoc.ModelAbsoluteTolerance;
-            //double aTol = Rhino.RhinoDoc.ActiveDoc.ModelAngleToleranceRadians;
-            //args.Display.ZBiasMode = Rhino.Display.ZBiasMode.TowardsCamera;
 
             // Surfaces
-            foreach (Shape shape in prevShapes)
+            foreach (Shape shape in prevDrawing.Shapes)
             {
                 if (shape.TextContent == string.Empty)
                 {

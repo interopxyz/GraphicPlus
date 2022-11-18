@@ -123,9 +123,9 @@ namespace GraphicPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap GP_Graphics_Fill_Gradient_Radial_01 {
+        internal static System.Drawing.Bitmap GP_Graphics_Fill_Gradient_Radial_B_01 {
             get {
-                object obj = ResourceManager.GetObject("GP_Graphics_Fill_Gradient_Radial_01", resourceCulture);
+                object obj = ResourceManager.GetObject("GP_Graphics_Fill_Gradient_Radial_B_01", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -133,9 +133,19 @@ namespace GraphicPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap GP_Graphics_Fill_Solid_01 {
+        internal static System.Drawing.Bitmap GP_Graphics_Fill_Solid_A_01 {
             get {
-                object obj = ResourceManager.GetObject("GP_Graphics_Fill_Solid_01", resourceCulture);
+                object obj = ResourceManager.GetObject("GP_Graphics_Fill_Solid_A_01", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GP_Graphics_Fill_Solid_D_01 {
+            get {
+                object obj = ResourceManager.GetObject("GP_Graphics_Fill_Solid_D_01", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -173,9 +183,19 @@ namespace GraphicPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
-        internal static System.Drawing.Bitmap GP_Preview_01 {
+        internal static System.Drawing.Bitmap GP_Rh_Preview7_01 {
             get {
-                object obj = ResourceManager.GetObject("GP_Preview_01", resourceCulture);
+                object obj = ResourceManager.GetObject("GP_Rh_Preview7_01", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GP_Rh_Viewer4_01 {
+            get {
+                object obj = ResourceManager.GetObject("GP_Rh_Viewer4_01", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
@@ -216,16 +236,6 @@ namespace GraphicPlus.Properties {
         internal static System.Drawing.Bitmap GP_SVG_Text_01 {
             get {
                 object obj = ResourceManager.GetObject("GP_SVG_Text_01", resourceCulture);
-                return ((System.Drawing.Bitmap)(obj));
-            }
-        }
-        
-        /// <summary>
-        ///   Looks up a localized resource of type System.Drawing.Bitmap.
-        /// </summary>
-        internal static System.Drawing.Bitmap GP_Viewer_01 {
-            get {
-                object obj = ResourceManager.GetObject("GP_Viewer_01", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
