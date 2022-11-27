@@ -1,5 +1,5 @@
 # Graphic +
-A scalable vector graphics plugin for Grasshopper 3d
+Scalable Vector Graphics plugin for Grasshopper 3d
 
 ---
 
