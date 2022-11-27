@@ -1,4 +1,4 @@
-# GraphicPlus
+# Graphic +
 A scalable vector graphics plugin for Grasshopper 3d
 
 ---
