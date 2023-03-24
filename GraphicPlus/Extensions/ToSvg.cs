@@ -325,10 +325,31 @@ namespace GraphicPlus
         {
             StringBuilder output = new StringBuilder();
             output.AppendLine("<filter id=\"ef-" + input.GetHashCode() + "\" x=\"-50%\" width=\"200%\" y =\"-50%\" height=\"200%\" >");
-            if (input.PostEffect.EffectType == Effect.EffectTypes.Blur) output.AppendLine(input.PostEffect.GetBlurEffect() );
-            if (input.PostEffect.EffectType == Effect.EffectTypes.Shadow) output.AppendLine(input.PostEffect.GetShadowEffect());
+            switch (input.PostEffect.EffectType)
+            {
+                case Effect.EffectTypes.Blur:
+                    output.AppendLine(input.PostEffect.GetBlurEffect());
+                    break;
+                case Effect.EffectTypes.Shadow:
+                    output.AppendLine(input.PostEffect.GetShadowEffect());
+                    break;
+                case Effect.EffectTypes.InnerGlow:
+                    output.AppendLine(input.PostEffect.GetInnerGlowEffect());
+                    break;
+                case Effect.EffectTypes.OuterGlow:
+                    output.AppendLine(input.PostEffect.GeOuterGlowEffect());
+                    break;
+            }
             output.Append("</filter>");
             return output.ToString();
+        }
+
+        public static string GetInnerGlowEffect(this Effect input)
+        {
+            return "<feFlood flood-color=\""+input.Color.ToSVG() + "\"/>" +
+            " <feComposite in2=\"SourceAlpha\" operator= \"out\" />" + 
+                " <feGaussianBlur stdDeviation=\""+ Math.Round(input.Radius / 3.0, 4) + "\" result =\"blur\" />"+
+                " <feComposite operator=\"atop\" in2=\"SourceGraphic\"/>";
         }
 
         public static string GetBlurEffect(this Effect input)
@@ -336,10 +357,26 @@ namespace GraphicPlus
             return "<feGaussianBlur result=\"blurOut\" in=\"SourceGraphic\" stdDeviation=\"" + Math.Round(input.Radius/3.0,4) + "\" />";
         }
 
+        public static string GeOuterGlowEffect(this Effect input)
+        {
+            return
+            "<feFlood flood-color=\"" + input.Color.ToSVG() + "\"  result =\"fillOut\"/>" +
+            " <feComposite in=\"fillOut\"  in2=\"SourceAlpha\" operator= \"in\" result =\"clipOut\" />"+
+            "<feOffset result=\"offOut\" in=\"clipOut\" dx=\"0\" dy=\"0\"/>" +
+            "<feGaussianBlur in=\"offOut\" stdDeviation=\"" + Math.Round(input.Radius/3.0 , 4) + "\" result =\"blurOut\" />" +
+            "<feMerge> "+
+            "<feMergeNode in=\"blurOut\" />"+
+            "<feMergeNode in=\"blurOut\" />" +
+            "<feMergeNode in=\"SourceGraphic\" />" +
+            "</feMerge>";
+        }
+
         public static string GetShadowEffect(this Effect input)
         {
             double radians = (input.Angle + 180) / 180 * Math.PI;
-            string output = "<feDropShadow dx=\"" + Math.Round(input.Distance * Math.Sin(radians), 4) + "\" dy=\"" + Math.Round(input.Distance * Math.Cos(radians), 4) + "\" stdDeviation=\"" + Math.Round(input.Radius/3.0, 4) + "\" flood-color=\"" + Color.Black.ToSVG() + "\" flood-opacity=\"" + 1.0 + "\" />" + Environment.NewLine;
+            string output = "<feOffset result=\"offOut\" in=\"SourceAlpha\" dx=\""+ Math.Round(input.Distance * Math.Sin(radians), 4) + "\" dy=\"" + Math.Round(input.Distance * Math.Cos(radians), 4) + "\" />" +
+                "<feGaussianBlur in=\"offOut\" stdDeviation=\"" + Math.Round(input.Radius / 3.0, 4) + "\" result =\"blurOut\" />" +
+                "<feBlend in=\"SourceGraphic\" in2=\"blurOut\" mode=\"normal\" />" + Environment.NewLine;
             return output;
         }
 
