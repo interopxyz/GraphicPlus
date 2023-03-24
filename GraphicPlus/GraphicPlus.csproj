@@ -82,6 +82,7 @@
     <Compile Include="Components\Drawings\GH_ToBitmap.cs" />
     <Compile Include="Components\Abstract\GH_BaseGraphics.cs" />
     <Compile Include="Components\Graphics\GH_SetEffectBlur.cs" />
+    <Compile Include="Components\Graphics\GH_SetEffectInnerGlow.cs" />
     <Compile Include="Components\Graphics\GH_SetEffectShadow.cs" />
     <Compile Include="Components\Graphics\GH_SetFillGradientLinear.cs" />
     <Compile Include="Components\Graphics\GH_SetFillGradientRadial.cs" />
@@ -169,6 +170,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GP-Graphics-Fill-Solid-A-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-EffectsGlow-01.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

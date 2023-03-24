@@ -452,8 +452,18 @@ namespace GraphicPlus
 
             drawingContext.Close();
 
-            if (input.Graphics.PostEffect.EffectType == Effect.EffectTypes.Blur) drawingVisual.Effect = input.Graphics.PostEffect.ToMediaBlurEffect();
-            if (input.Graphics.PostEffect.EffectType == Effect.EffectTypes.Shadow) drawingVisual.Effect = input.Graphics.PostEffect.ToMediaShadowEffect();
+            switch (input.Graphics.PostEffect.EffectType)
+            {
+                case Effect.EffectTypes.Blur:
+                    drawingVisual.Effect = input.Graphics.PostEffect.ToMediaBlurEffect();
+                    break;
+                case Effect.EffectTypes.Shadow:
+                    drawingVisual.Effect = input.Graphics.PostEffect.ToMediaShadowEffect();
+                    break;
+                case Effect.EffectTypes.OuterGlow:
+                    drawingVisual.Effect = input.Graphics.PostEffect.ToMediaOuterGlowEffect();
+                    break;
+            }
 
             return drawingVisual;
         }
@@ -642,13 +652,25 @@ namespace GraphicPlus
             return output;
         }
 
+        public static Se.DropShadowEffect ToMediaOuterGlowEffect(this Effect input)
+        {
+            Se.DropShadowEffect output = new Se.DropShadowEffect()
+            {
+                BlurRadius = input.Radius,
+                Direction = input.Angle + 90,
+                ShadowDepth = input.Distance,
+                Color = input.Color.ToMediaColor()
+            };
+            return output;
+        }
+
         public static Se.DropShadowEffect ToMediaShadowEffect(this Effect input)
         {
             Se.DropShadowEffect output = new Se.DropShadowEffect
             {
                 BlurRadius = input.Radius,
                 Direction = input.Angle + 90,
-                ShadowDepth = input.Distance
+                ShadowDepth = 0
             };
 
             return output;

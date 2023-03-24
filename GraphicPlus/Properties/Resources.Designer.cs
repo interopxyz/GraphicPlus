@@ -103,6 +103,16 @@ namespace GraphicPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap GP_EffectsGlow_01 {
+            get {
+                object obj = ResourceManager.GetObject("GP_EffectsGlow_01", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap GP_EffectsShadow_01 {
             get {
                 object obj = ResourceManager.GetObject("GP_EffectsShadow_01", resourceCulture);

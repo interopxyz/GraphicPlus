@@ -12,12 +12,13 @@ namespace GraphicPlus
 
         #region members
 
-        public enum EffectTypes { None, Blur, Shadow };
+        public enum EffectTypes { None, Blur, Shadow, InnerGlow, OuterGlow };
         protected EffectTypes effectType = EffectTypes.None;
 
         protected double radius = 0.0;
         protected double distance = 0.0;
         protected double angle = 0.0;
+        protected Color color = Color.Red;
 
         #endregion
 
@@ -33,13 +34,27 @@ namespace GraphicPlus
             this.effectType = effect.effectType;
             this.radius = effect.radius;
             this.distance = effect.distance;
+            this.color = effect.color;
             this.angle = effect.angle;
         }
 
-        public Effect(double radius)
+        public Effect(double radius, EffectTypes effectType = EffectTypes.Blur)
         {
             this.radius = radius;
-            this.effectType = EffectTypes.Blur;
+            this.effectType = effectType;
+        }
+
+        public Effect(double radius, Color color, bool inner)
+        {
+            this.radius = radius;
+            this.color = color;
+            if (inner) {
+            this.effectType =EffectTypes.InnerGlow;
+            }
+            else
+            {
+                this.effectType = EffectTypes.OuterGlow;
+            }
         }
 
         public Effect(double radius, double distance, double angle)
@@ -62,6 +77,11 @@ namespace GraphicPlus
         public virtual double Distance
         {
             get { return distance; }
+        }
+
+        public virtual Color Color
+        {
+            get { return color; }
         }
 
         public virtual double Angle
@@ -87,6 +107,7 @@ namespace GraphicPlus
                 hash = (hash * 7) + (this.radius.GetHashCode());
                 hash = (hash * 7) + (this.distance.GetHashCode());
                 hash = (hash * 7) + (this.angle.GetHashCode());
+                hash = (hash * 7) + (this.color.GetHashCode());
                 return hash;
             }
         }

@@ -193,6 +193,11 @@ namespace GraphicPlus
             this.effect = new Effect(radius);
         }
 
+        public void SetGlow(double radius, Color color, bool inner)
+        {
+            this.effect = new Effect(radius,color, inner);
+        }
+
         public void SetShadow(double radius, double distance, double angle)
         {
             this.effect = new Effect(radius,distance,angle);
