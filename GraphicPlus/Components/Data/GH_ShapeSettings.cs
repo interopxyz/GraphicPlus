@@ -34,7 +34,7 @@ namespace GraphicPlus.Components.Data
             pManager.AddGenericParameter("Shape / Geometry", "S", "A Graphic Plus Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
             pManager.AddTextParameter("ID", "I", "An optional id override" + System.Environment.NewLine + "(Note: If overriding this property every value should be unique)", GH_ParamAccess.item);
             pManager[1].Optional = true;
-            pManager.AddTextParameter("Layer", "L", "An optional layer name", GH_ParamAccess.item);
+            pManager.AddTextParameter("Layer", "L", "An optional layer name" + System.Environment.NewLine + "Uses Rhino's Layer structure for nesting ( Parent :: Child :: GrandChild ) ", GH_ParamAccess.item);
             pManager[2].Optional = true;
         }
 
