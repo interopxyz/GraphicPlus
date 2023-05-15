@@ -24,7 +24,7 @@ namespace GraphicPlus
         public bool HasTitle = false;
         public string Title = "";
 
-        public string Layer = "";
+        public string Layer = "Default";
 
         public enum CurveTypes { None, Polyline, Circle, Ellipse, Curve };
 
