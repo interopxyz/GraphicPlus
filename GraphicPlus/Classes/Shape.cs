@@ -22,6 +22,9 @@ namespace GraphicPlus
         public string Hyperlink = string.Empty;
         public Dictionary<string, string> Data = new Dictionary<string, string>();
         public bool HasTitle = false;
+        public string Title = "";
+
+        public string Layer = "";
 
         public enum CurveTypes { None, Polyline, Circle, Ellipse, Curve };
 
@@ -50,6 +53,8 @@ namespace GraphicPlus
             this.Data = shape.Data;
             this.Hyperlink = shape.Hyperlink;
             this.HasTitle = shape.HasTitle;
+            this.Title = shape.Title;
+            this.Layer = shape.Layer;
             this.pathType = shape.pathType;
             this.curveTypes = shape.curveTypes;
             this.curves = shape.curves;
@@ -362,7 +367,17 @@ namespace GraphicPlus
                 if ((this.Graphics.PostEffect.EffectType != Effect.EffectTypes.None)) output.Append("filter = \"url(#ef-" + this.Graphics.GetHashCode() + ")\" ");
                 output.Append("> ");
             }
-            if (this.HasTitle & this.HasData) output.Append(" <title>"+ flatData + "</title>");
+            if (this.HasTitle)
+            {
+                if (this.Title != "")
+                {
+                    output.Append(" <title>" + this.Title + "</title>");
+                }
+                else if (this.HasData)
+                {
+                    output.Append(" <title>" + flatData + "</title>");
+                }
+            }
             output.Append(" </" + close + ">");
             if (this.HasLink) output.AppendLine("</a>");
             return output.ToString();

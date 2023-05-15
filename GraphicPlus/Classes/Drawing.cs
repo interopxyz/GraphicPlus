@@ -190,6 +190,7 @@ namespace GraphicPlus
 
         public string ToScript()
         {
+            //Rhino.DocObjects.Tables.LayerTable table = Rhino.RhinoDoc.ActiveDoc.Layers;
             StringBuilder output = new StringBuilder();
 
             double W = Math.Round(width, digits);
@@ -200,15 +201,24 @@ namespace GraphicPlus
             double Y = Math.Round(TranslateY, digits);
 
             //Setup Canvas
-            output.Append(Properties.Resources.svg_header);
+            output.AppendLine("<?xml version=\"1.0\" encoding=\"utf-8\"?>");
+            output.Append("<svg ");
+
+            output.Append("xmlns=\"http://www.w3.org/2000/svg\" ");
+            output.Append("xmlns:xlink=\"http://www.w3.org/1999/xlink\" ");
+
+            output.Append(" x=\""+X+"px\" y=\""+Y+"px\" ");
             output.Append("width=\"" + W + "\" height=\"" + H + "\" ");
             output.Append("viewBox = \" " + X + " " + Y + " " + W + " " + H + "\" ");
-            output.Append("preserveAspectRatio=\"xMinYMin meet\"");
+            output.Append(" style=\"enable-background:new " + X + " " + Y + " " + W + " " + H + "; \" ");
+            output.Append("preserveAspectRatio=\"xMinYMin meet\" ");
+            output.Append(" xml:space=\"preserve\" ");
             output.AppendLine(">");
 
             string color = ColorTranslator.ToHtml(Background);
-            if (Background.A == 0) color = "none";
-            output.AppendLine("<rect id=\"background\" x=\""+X+"\" y=\""+Y+"\" width=\"" + W + "\" height=\"" + H + "\" style=\"fill:"+color+"; stroke:none;\" />");
+            if (Background.A != 0) output.AppendLine("<rect id=\"background\" x=\""+X+"\" y=\""+Y+"\" width=\"" + W + "\" height=\"" + H + "\" style=\"fill:"+color+"; stroke:none;\" />");
+
+            Dictionary<string, List<string>> pathTree = new Dictionary<string, List<string>>();
 
             StringBuilder defs = new StringBuilder();
             defs.AppendLine("<defs>");
@@ -217,7 +227,8 @@ namespace GraphicPlus
             //Draw Geometry
             foreach(Shape shape in shapes)
             {
-                output.AppendLine(shape.ToScript(boundary, S));
+                if (!pathTree.ContainsKey(shape.Layer)) pathTree.Add(shape.Layer, new List<string>());
+                pathTree[shape.Layer].Add(shape.ToScript(boundary, S));
                 if (!graphicIds.Contains(shape.Graphics.GetHashCode()))
                 {
                     switch (shape.PathType)
@@ -238,6 +249,57 @@ namespace GraphicPlus
                 }
                 i++;
             }
+
+            //Manage Geometry with no 
+            if (pathTree.ContainsKey(""))
+            {
+                foreach (string path in pathTree[""])
+                {
+                    output.AppendLine(path);
+                }
+            }
+            pathTree.Remove("");
+                List<string> groups = new List<string>();
+            foreach(string key in pathTree.Keys)
+            {
+                string[] subLayers = key.Split(new string[] { "::" }, StringSplitOptions.None);
+                int j = 0;
+                string compoundLayer = "";
+                foreach(string layer in subLayers)
+                {
+                    compoundLayer += layer;
+                    if (!groups.Contains(compoundLayer))
+                    {
+                        groups.Add(compoundLayer);
+                    }
+                        compoundLayer += "::";
+                }
+            }
+
+            string[] arrGroups = groups.ToArray();
+            Array.Sort(arrGroups);
+            int prevCount = arrGroups[0].Split(new string[] { "::" }, StringSplitOptions.None).Length-1;
+            foreach(string group in arrGroups)
+            {
+                string[] subGroup = group.Split(new string[] { "::" }, StringSplitOptions.None);
+                int count = subGroup.Length;
+                if (count == prevCount) output.AppendLine("</g>");
+                if (count < prevCount)
+                {
+                    for(int j =count;j<prevCount+1;j++) output.AppendLine("</g>");
+                }
+                prevCount = count;
+                output.AppendLine("<g id=\"" + subGroup[count - 1] + "\">");
+                if (pathTree.ContainsKey(group))
+                {
+                    foreach(string path in pathTree[group])
+                    {
+                        output.AppendLine(path);
+                    }
+                }
+            }
+            for (int j = 0; j < prevCount; j++) output.AppendLine("</g>");
+
             defs.AppendLine("</defs>");
 
 

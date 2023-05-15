@@ -223,6 +223,16 @@ namespace GraphicPlus.Properties {
         /// <summary>
         ///   Looks up a localized resource of type System.Drawing.Bitmap.
         /// </summary>
+        internal static System.Drawing.Bitmap GP_SVG_Layers2_01 {
+            get {
+                object obj = ResourceManager.GetObject("GP_SVG_Layers2_01", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
         internal static System.Drawing.Bitmap GP_SVG_Link_01 {
             get {
                 object obj = ResourceManager.GetObject("GP_SVG_Link_01", resourceCulture);
@@ -246,6 +256,16 @@ namespace GraphicPlus.Properties {
         internal static System.Drawing.Bitmap GP_SVG_Text_01 {
             get {
                 object obj = ResourceManager.GetObject("GP_SVG_Text_01", resourceCulture);
+                return ((System.Drawing.Bitmap)(obj));
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized resource of type System.Drawing.Bitmap.
+        /// </summary>
+        internal static System.Drawing.Bitmap GP_SVG_Tooltip2_01 {
+            get {
+                object obj = ResourceManager.GetObject("GP_SVG_Tooltip2_01", resourceCulture);
                 return ((System.Drawing.Bitmap)(obj));
             }
         }
