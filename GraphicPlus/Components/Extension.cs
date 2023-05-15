@@ -5,26 +5,28 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using gp = GraphicPlus;
+
 
 namespace GraphicPlus
 {
     public static class Extension
     {
-        public static bool TryGetDrawings(this IGH_Goo input, ref Drawing drawing)
+        public static bool TryGetDrawings(this IGH_Goo input, ref gp.Drawing drawing)
         {
             bool status = false;
-            Drawing newDrawing;
-            if (input.CastTo<Drawing>(out newDrawing))
+            gp.Drawing newDrawing;
+            if (input.CastTo<gp.Drawing>(out newDrawing))
             {
                 drawing.MergeDrawing(newDrawing);
                 status = true;
             }
             else
             {
-                Shape shape = null;
+                gp.Shape shape = null;
                 if (input.TryGetShape(ref shape))
                 {
-                    drawing.MergeDrawing(new Drawing(shape));
+                    drawing.MergeDrawing(new gp.Drawing(shape));
                     status = true;
                 }
             }

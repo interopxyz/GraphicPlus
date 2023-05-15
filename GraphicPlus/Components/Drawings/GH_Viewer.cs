@@ -8,6 +8,7 @@ using Grasshopper.Kernel.Attributes;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System.Windows.Forms;
+using gp = GraphicPlus;
 
 namespace GraphicPlus.Components.Drawings
 {
@@ -64,7 +65,7 @@ namespace GraphicPlus.Components.Drawings
         /// <param name="DA">The DA object is used to retrieve from inputs and store in outputs.</param>
         protected override void SolveInstance(IGH_DataAccess DA)
         {
-            Drawing drawing = new Drawing();
+            gp.Drawing drawing = new gp.Drawing();
             List<IGH_Goo> goos = new List<IGH_Goo>();
             if (!DA.GetDataList(0, goos)) return;
 

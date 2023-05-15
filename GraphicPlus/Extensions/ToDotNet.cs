@@ -12,6 +12,8 @@ using Rg = Rhino.Geometry;
 using System.IO;
 using System.Collections.Generic;
 
+using gp = GraphicPlus;
+
 namespace GraphicPlus
 {
     public static class ToDotNet
@@ -356,7 +358,7 @@ namespace GraphicPlus
 
         #region To Geometry Visual
 
-        public static Sm.DrawingVisual ToVisualDrawing(this Shape input,Drawing drawing)
+        public static Sm.DrawingVisual ToVisualDrawing(this Shape input, gp.Drawing drawing)
         {
             Rg.Rectangle3d boundary = drawing.Boundary;
             double Scale = drawing.Scale;
@@ -468,7 +470,7 @@ namespace GraphicPlus
             return drawingVisual;
         }
 
-        public static Sm.DrawingVisual ToGeometryVisual(this Drawing input)
+        public static Sm.DrawingVisual ToGeometryVisual(this gp.Drawing input)
         {
             Sm.DrawingVisual drawing = new Sm.DrawingVisual();
             Rg.Point3d origin = input.Boundary.Corner(0);
@@ -613,7 +615,7 @@ namespace GraphicPlus
         #region Drawing to Bitmap
 
         // Bitmap from Drawing
-        public static Sd.Bitmap ToBitmap(this Drawing drawing)
+        public static Sd.Bitmap ToBitmap(this gp.Drawing drawing)
         {
             return drawing.ToGeometryVisual().ToBitmap(drawing.Width, drawing.Height, drawing.Dpi, new Si.PngBitmapEncoder());
         }

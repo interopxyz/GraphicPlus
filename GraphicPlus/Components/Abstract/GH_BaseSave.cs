@@ -8,12 +8,13 @@ using Grasshopper.Kernel.Attributes;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System.Windows.Forms;
+using gp = GraphicPlus;
 
 namespace GraphicPlus.Components
 {
     public abstract class GH_BaseSave : GH_Component
     {
-        protected Drawing prevDrawing = new Drawing();
+        protected gp.Drawing prevDrawing = new gp.Drawing();
 
         /// <summary>
         /// Initializes a new instance of the GH_SaveBase class.
@@ -31,7 +32,7 @@ namespace GraphicPlus.Components
 
         protected override void BeforeSolveInstance()
         {
-            prevDrawing = new Drawing();
+            prevDrawing = new gp.Drawing();
         }
 
         /// <summary>

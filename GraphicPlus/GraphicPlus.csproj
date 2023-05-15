@@ -72,6 +72,8 @@
     <Compile Include="Classes\Shape.cs" />
     <Compile Include="Components\Data\GH_ShapeData.cs" />
     <Compile Include="Components\Data\GH_ShapeLink.cs" />
+    <Compile Include="Components\Data\GH_ShapeSettings.cs" />
+    <Compile Include="Components\Data\GH_ShapeTooltip.cs" />
     <Compile Include="Components\Drawings\GH_ConstructDrawing.cs" />
     <Compile Include="Components\Drawings\GH_DrawingToText.cs" />
     <Compile Include="Components\Drawings\GH_PreviewDrawing.cs" />
@@ -173,6 +175,12 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\GP-EffectsGlow-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-SVG-Tooltip2-01.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\GP-SVG-Layers2-01.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

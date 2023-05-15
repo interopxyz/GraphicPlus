@@ -6,14 +6,14 @@ using System.Collections.Generic;
 
 namespace GraphicPlus.Components.Data
 {
-    public class GH_ShapeData : GH_BaseSave
+    public class GH_ShapeSettings : GH_BaseSave
     {
         /// <summary>
         /// Initializes a new instance of the GH_ShapeData class.
         /// </summary>
-        public GH_ShapeData()
-          : base("Shape Data", "Data",
-              "Optionally override Id and add a series of data items to a Shape.",
+        public GH_ShapeSettings()
+          : base("Shape Settings", "Settings",
+              "Optionally override Id and set a group / layer.",
               "Display", "Graphics")
         {
         }
@@ -32,9 +32,9 @@ namespace GraphicPlus.Components.Data
         protected override void RegisterInputParams(GH_Component.GH_InputParamManager pManager)
         {
             pManager.AddGenericParameter("Shape / Geometry", "S", "A Graphic Plus Shape, or a Curve, Brep, Mesh", GH_ParamAccess.item);
-            pManager.AddTextParameter("Keys", "K", "A list of titles to be added to the SVG element as data-'key'", GH_ParamAccess.list);
+            pManager.AddTextParameter("ID", "I", "An optional id override" + System.Environment.NewLine + "(Note: If overriding this property every value should be unique)", GH_ParamAccess.item);
             pManager[1].Optional = true;
-            pManager.AddTextParameter("Values", "V", "The values coordinated with the titles to attach to the element", GH_ParamAccess.list);
+            pManager.AddTextParameter("Layer", "L", "An optional layer name", GH_ParamAccess.item);
             pManager[2].Optional = true;
         }
 
@@ -56,28 +56,13 @@ namespace GraphicPlus.Components.Data
             IGH_Goo goo = null;
             if (!DA.GetData(0, ref goo)) return;
             Shape shape = null;
-            if (!goo.TryGetShape(ref shape))return;
+            if (!goo.TryGetShape(ref shape)) return;
 
-            List<string> keys = new List<string>();
-            DA.GetDataList(1, keys);
+            string id = string.Empty;
+            if(DA.GetData(1, ref id)) shape.SetId(id);
 
-            List<string> vals = new List<string>();
-            DA.GetDataList(2, vals);
-
-            int count = keys.Count;
-            for (int i = vals.Count; i < count; i++) vals.Add(string.Empty);
-
-            for (int i = 0; i < count; i++)
-            {
-                if (!shape.Data.ContainsKey(keys[i]))
-                {
-                    shape.Data.Add(keys[i], vals[i]);
-                }
-                else
-                {
-                    shape.Data[keys[i]] = vals[i];
-                }
-            }
+            string layer = string.Empty;
+            if (DA.GetData(2, ref layer)) shape.Layer = layer;
 
             DA.SetData(0, shape);
             prevDrawing.MergeDrawing(shape);
@@ -92,7 +77,7 @@ namespace GraphicPlus.Components.Data
             {
                 //You can add image files to your project resources and access them like this:
                 // return Resources.IconForThisComponent;
-                return Properties.Resources.GP_SVG_Data_01;
+                return Properties.Resources.GP_SVG_Layers2_01;
             }
         }
 
@@ -101,7 +86,7 @@ namespace GraphicPlus.Components.Data
         /// </summary>
         public override Guid ComponentGuid
         {
-            get { return new Guid("7eea3a07-f271-4f6b-8c9d-1ddc9b1fd002"); }
+            get { return new Guid("e888a1fe-0929-49a2-95df-9c74fcc194b4"); }
         }
     }
 }
