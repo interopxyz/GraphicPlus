@@ -654,19 +654,19 @@ namespace GraphicPlus
             return output;
         }
 
-        public static Se.DropShadowEffect ToMediaOuterGlowEffect(this Effect input)
+        public static Se.DropShadowEffect ToMediaShadowEffect(this Effect input)
         {
             Se.DropShadowEffect output = new Se.DropShadowEffect()
             {
                 BlurRadius = input.Radius,
                 Direction = input.Angle + 90,
-                ShadowDepth = input.Distance,
-                Color = input.Color.ToMediaColor()
+                ShadowDepth = input.Distance
+               //Color = input.Color.ToMediaColor()
             };
             return output;
         }
 
-        public static Se.DropShadowEffect ToMediaShadowEffect(this Effect input)
+        public static Se.DropShadowEffect ToMediaOuterGlowEffect(this Effect input)
         {
             Se.DropShadowEffect output = new Se.DropShadowEffect
             {
