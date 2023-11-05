@@ -1,4 +1,5 @@
 ﻿using Grasshopper.Kernel;
+using Grasshopper.Kernel.Parameters;
 using Grasshopper.Kernel.Types;
 using Rhino.Geometry;
 using System;
@@ -42,6 +43,11 @@ namespace GraphicPlus.Components.Drawings
             pManager[3].Optional = true;
             pManager.AddColourParameter("Color", "C", "An optional background color", GH_ParamAccess.item, Color.Transparent);
             pManager[4].Optional = true;
+            pManager.AddIntegerParameter("Units", "U", "An optional background color", GH_ParamAccess.item, 0);
+            pManager[5].Optional = true;
+
+            Param_Integer paramA = (Param_Integer)pManager[5];
+            foreach (Drawing.DocumentUnits value in Enum.GetValues(typeof(Drawing.DocumentUnits))) paramA.AddNamedValue(value.ToString(), (int)value);
         }
 
         /// <summary>
@@ -95,11 +101,14 @@ namespace GraphicPlus.Components.Drawings
             Color background = Color.Transparent;
             DA.GetData(4, ref background);
 
+            int units = 0;
+            DA.GetData(5, ref units);
+
             Drawing drawing = new Drawing(shapes, boundary, width, height)
             {
-                Background = background
-            };
-            //prevShapes.AddRange(shapes);
+                Background = background,
+                Units = (Drawing.DocumentUnits)units
+        }; 
 
             DA.SetData(0, drawing);
             DA.SetData(1, boundary);

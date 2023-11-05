@@ -11,6 +11,30 @@ namespace GraphicPlus
     public static class ToSvg
     {
 
+        #region enums
+
+        public static string ToText(this Drawing.DocumentUnits input)
+        {
+            switch (input){
+                default:
+                    return "";
+                case Drawing.DocumentUnits.Pixels:
+                    return "px";
+                case Drawing.DocumentUnits.Picas:
+                    return "pc";
+                case Drawing.DocumentUnits.Points:
+                    return "pt";
+                case Drawing.DocumentUnits.Millimeters:
+                    return "mm";
+                case Drawing.DocumentUnits.Centimeters:
+                    return "cm";
+                case Drawing.DocumentUnits.Inches:
+                    return "in";
+            }
+        }
+
+        #endregion
+
         #region compound
 
         public static string ToSubScript(this Circle input, int digits = 4)
@@ -31,7 +55,7 @@ namespace GraphicPlus
 
         public static string ToSubScript(this Ellipse input, int digits = 4)
         {
-            return input.ToNurbsCurve().ToSubScript();
+            return input.ToNurbsCurve().ToSubScript(digits);
             //StringBuilder output = new StringBuilder();
             //Point3d center = input.Plane.Origin;
             //double X = Math.Round(center.X, digits);
@@ -51,10 +75,10 @@ namespace GraphicPlus
         {
             StringBuilder output = new StringBuilder();
 
-            output.Append("M "+input[0].ToScript());
+            output.Append("M "+input[0].ToScript(digits));
             for (int i = 1; i < input.Count; i++)
             {
-                output.Append("L " + input[i].ToScript());
+                output.Append("L " + input[i].ToScript(digits));
             }
             output.Append("Z ");
 
@@ -71,7 +95,7 @@ namespace GraphicPlus
             output.Append("M " + input.PointAtStart.ToScript());
             foreach (BezierCurve bezier in beziers)
             {
-                output.Append(" C " + bezier.GetControlVertex3d(1).ToScript() + bezier.GetControlVertex3d(2).ToScript() + bezier.GetControlVertex3d(3).ToScript());
+                output.Append(" C " + bezier.GetControlVertex3d(1).ToScript(digits) + bezier.GetControlVertex3d(2).ToScript(digits) + bezier.GetControlVertex3d(3).ToScript(digits));
             }
             output.Append("Z ");
 
@@ -381,5 +405,6 @@ namespace GraphicPlus
         }
 
         #endregion
+
     }
 }
