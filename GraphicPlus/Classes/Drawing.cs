@@ -13,7 +13,7 @@ namespace GraphicPlus
 
         #region members
 
-
+        public enum DocumentUnits {None, Pixels, Points, Picas, Millimeters, Centimeters, Inches }
         protected List<Shape> shapes = new List<Shape>();
 
         protected double width = 0;
@@ -23,6 +23,7 @@ namespace GraphicPlus
         protected Rectangle3d boundary = Rectangle3d.Unset;
 
         public Color Background = Color.Transparent;
+        public DocumentUnits Units = DocumentUnits.Pixels;
 
         public int digits = 4;
 
@@ -53,6 +54,7 @@ namespace GraphicPlus
             this.Background = drawing.Background;
             this.shapes = drawing.shapes;
             this.dpi = drawing.dpi;
+            this.Units = drawing.Units;
         }
 
         public Drawing(List<Shape> shapes, Rectangle3d boundary, double width, double height)
@@ -174,6 +176,7 @@ namespace GraphicPlus
 
             public void MergeDrawing(Drawing drawing)
         {
+            if (drawing.Units > this.Units) this.Units = drawing.Units;
             foreach (Shape shape in drawing.shapes)
             {
                 this.shapes.Add(new Shape(shape));
@@ -207,8 +210,8 @@ namespace GraphicPlus
             output.Append("xmlns=\"http://www.w3.org/2000/svg\" ");
             output.Append("xmlns:xlink=\"http://www.w3.org/1999/xlink\" ");
 
-            output.Append(" x=\""+X+"px\" y=\""+Y+"px\" ");
-            output.Append("width=\"" + W + "\" height=\"" + H + "\" ");
+            output.Append(" x=\""+X+"\" y=\""+Y+"\" ");
+            output.Append("width=\"" + W +this.Units.ToText()+ "\" height=\"" + H + this.Units.ToText() + "\" ");
             output.Append("viewBox = \" " + X + " " + Y + " " + W + " " + H + "\" ");
             output.Append(" style=\"enable-background:new " + X + " " + Y + " " + W + " " + H + "; \" ");
             output.Append("preserveAspectRatio=\"xMinYMin meet\" ");
