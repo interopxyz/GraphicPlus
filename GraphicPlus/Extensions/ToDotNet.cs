@@ -629,7 +629,8 @@ namespace GraphicPlus
         // Bitmap from Visual, Width, Height, Encoder
         public static Sd.Bitmap ToBitmap(this Sm.DrawingVisual drawing, double width, double height, int dpi, Si.BitmapEncoder encoder)
         {
-
+            if (width <= 0) width = 1;
+            if (height <= 0) height = 1;
             var bitmap = new Si.RenderTargetBitmap((int)(width / 96 * dpi), (int)(height / 96 * dpi), dpi, dpi, Sm.PixelFormats.Pbgra32);
 
             bitmap.Render(drawing);

@@ -188,7 +188,9 @@ namespace GraphicPlus
             if (drawing.Background != Color.Transparent) this.Background = drawing.Background;
             this.boundary = box.ToRectangle();
             this.width = Math.Max(drawing.width, this.width);
+            this.width = Math.Max(box.Max.X-box.Min.X, this.width);
             this.height = Math.Max(drawing.height, this.height);
+            this.height = Math.Max(box.Max.Y - box.Min.Y, this.height);
         }
 
         public string ToScript()
