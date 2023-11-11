@@ -43,7 +43,7 @@ namespace GraphicPlus.Components.Drawings
             pManager[3].Optional = true;
             pManager.AddColourParameter("Color", "C", "An optional background color", GH_ParamAccess.item, Color.Transparent);
             pManager[4].Optional = true;
-            pManager.AddIntegerParameter("Units", "U", "An optional background color", GH_ParamAccess.item, 0);
+            pManager.AddIntegerParameter("Units", "U", "An optional unit scale for the drawing", GH_ParamAccess.item, 0);
             pManager[5].Optional = true;
 
             Param_Integer paramA = (Param_Integer)pManager[5];

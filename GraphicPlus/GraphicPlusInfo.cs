@@ -58,7 +58,7 @@ namespace GraphicPlus
         {
             get
             {
-                return "1.8.9.0";
+                return "1.8.10.0";
             }
         }
     }
