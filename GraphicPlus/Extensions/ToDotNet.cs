@@ -481,7 +481,6 @@ namespace GraphicPlus
 
             Sm.DrawingVisual background = new Sm.DrawingVisual();
             Sm.DrawingContext bgC = background.RenderOpen();
-            Sw.Rect rect = new Sw.Rect(0, 0, input.Width, input.Height);
             bgC.DrawRectangle(new Sm.SolidColorBrush(input.Background.ToMediaColor()),null, new Sw.Rect(0, 0, input.Width, input.Height));
             bgC.Close();
             
@@ -631,7 +630,8 @@ namespace GraphicPlus
         {
             if (width <= 0) width = 1;
             if (height <= 0) height = 1;
-            var bitmap = new Si.RenderTargetBitmap((int)(width / 96 * dpi), (int)(height / 96 * dpi), dpi, dpi, Sm.PixelFormats.Pbgra32);
+            double ppi = dpi;
+            var bitmap = new Si.RenderTargetBitmap((int)Math.Ceiling(Math.Ceiling(width) / 96.0 * ppi), (int)Math.Ceiling(Math.Ceiling(height) / 96.0 * ppi), ppi, ppi, Sm.PixelFormats.Pbgra32);
 
             bitmap.Render(drawing);
 
