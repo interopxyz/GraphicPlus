@@ -1,18 +1,15 @@
 ﻿using System;
-using Sd = System.Drawing;
-using Sw = System.Windows;
-using Sh = System.Windows.Shapes;
-using Sm = System.Windows.Media;
-using Si = System.Windows.Media.Imaging;
-using Se = System.Windows.Media.Effects;
-
-using System.Linq;
-
-using Rg = Rhino.Geometry;
-using System.IO;
 using System.Collections.Generic;
-
+using System.IO;
+using System.Linq;
 using gp = GraphicPlus;
+using Rg = Rhino.Geometry;
+using Sd = System.Drawing;
+using Se = System.Windows.Media.Effects;
+using Sh = System.Windows.Shapes;
+using Si = System.Windows.Media.Imaging;
+using Sm = System.Windows.Media;
+using Sw = System.Windows;
 
 namespace GraphicPlus
 {
@@ -476,12 +473,12 @@ namespace GraphicPlus
             Rg.Point3d origin = input.Boundary.Corner(0);
             double rX = input.Boundary.Width * input.Scale;
             double rY = input.Boundary.Height * input.Scale;
-            origin.X -= (input.Width / rX);
-            origin.Y += (input.Height / rY);
+            origin.X -= (input.PixelWidth / rX);
+            origin.Y += (input.PixelHeight / rY);
 
             Sm.DrawingVisual background = new Sm.DrawingVisual();
             Sm.DrawingContext bgC = background.RenderOpen();
-            bgC.DrawRectangle(new Sm.SolidColorBrush(input.Background.ToMediaColor()),null, new Sw.Rect(0, 0, input.Width, input.Height));
+            bgC.DrawRectangle(new Sm.SolidColorBrush(input.Background.ToMediaColor()),null, new Sw.Rect(0, 0, input.PixelWidth, input.PixelHeight));
             bgC.Close();
             
             drawing.Children.Add(background);
@@ -616,12 +613,13 @@ namespace GraphicPlus
         // Bitmap from Drawing
         public static Sd.Bitmap ToBitmap(this gp.Drawing drawing)
         {
-            return drawing.ToGeometryVisual().ToBitmap(drawing.Width, drawing.Height, drawing.Dpi, new Si.PngBitmapEncoder());
+            return drawing.ToGeometryVisual().ToBitmap(drawing.PixelWidth, drawing.PixelHeight, drawing.Dpi, new Si.PngBitmapEncoder());
         }
 
         // Bitmap from Visual, Width, and Height
-        public static Sd.Bitmap ToBitmap(this Sm.DrawingVisual drawing, double width, double height)
+        public static Sd.Bitmap ToBitmap(this Sm.DrawingVisual drawing, double width, double height, Drawing.DocumentUnits units = Drawing.DocumentUnits.Pixels)
         {
+
             return drawing.ToBitmap(width, height, 96, new Si.PngBitmapEncoder());
         }
 
@@ -631,7 +629,7 @@ namespace GraphicPlus
             if (width <= 0) width = 1;
             if (height <= 0) height = 1;
             double ppi = dpi;
-            var bitmap = new Si.RenderTargetBitmap((int)Math.Ceiling(Math.Ceiling(width) / 96.0 * ppi), (int)Math.Ceiling(Math.Ceiling(height) / 96.0 * ppi), ppi, ppi, Sm.PixelFormats.Pbgra32);
+            var bitmap = new Si.RenderTargetBitmap((int)Math.Ceiling(Math.Ceiling(width) * ppi), (int)Math.Ceiling(Math.Ceiling(height) * ppi), ppi, ppi, Sm.PixelFormats.Pbgra32);
 
             bitmap.Render(drawing);
 

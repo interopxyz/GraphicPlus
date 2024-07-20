@@ -151,6 +151,46 @@ namespace GraphicPlus
             }
         }
 
+        public virtual int PixelHeight
+        {
+            get
+            {
+                switch (Units)
+                {
+                    default:
+                        return (int)Math.Ceiling(height);
+                    case DocumentUnits.Inches:
+                        return (int)Math.Ceiling(height * Dpi);
+                    case DocumentUnits.Millimeters:
+                        return (int)Math.Ceiling(height * Dpi * 0.03937008);
+                    case DocumentUnits.Centimeters:
+                        return (int)Math.Ceiling(height * Dpi * 0.3937008);
+                    case DocumentUnits.Picas:
+                        return (int)Math.Ceiling(height * 12);
+                }
+            }
+        }
+
+        public virtual int PixelWidth
+        {
+            get
+            {
+                switch (Units)
+                {
+                    default:
+                        return (int)Math.Ceiling(width);
+                    case DocumentUnits.Inches:
+                        return (int)Math.Ceiling(width * Dpi);
+                    case DocumentUnits.Millimeters:
+                        return (int)Math.Ceiling(width * Dpi* 0.03937008);
+                    case DocumentUnits.Centimeters:
+                        return (int)Math.Ceiling(width * Dpi * 0.3937008);
+                    case DocumentUnits.Picas:
+                        return (int)Math.Ceiling(width * 12);
+                }
+            }
+        }
+
         public virtual double Width
         {
             get { return width; }
